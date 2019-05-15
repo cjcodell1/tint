@@ -41,7 +41,6 @@ func (tm *TuringMachine) Step(conf Config) Config {
 		panic(err)
 	}
 	return next(conf, next_state, next_symbol, next_move)
-//	return move(write(trans(conf, next_state), next_symbol), next_move)
 }
 
 func (tm *TuringMachine) findTransition(state string, symbol string) (string, string, string, error) {
