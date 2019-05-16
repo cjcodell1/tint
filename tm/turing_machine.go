@@ -3,24 +3,38 @@ package tm
 import (
 	"fmt"
 	"strings"
+	"log"
 )
 
 const (
 	Blank string = "_"
 )
 
-type TuringMachine struct {
+
+type TuringMachine interface {
+	Start(input string) Config
+	Step(conf Config) Config
+}
+
+type turingMachine struct {
 	Trans []Transition
 	StartState string
 	AcceptState string
 	RejectState string
 }
 
-func (tm *TuringMachine) Start(input string) Config {
+func NewTuringMachine(trans []Transition, start string, accept string, reject string) turingMachine {
+	if accept == reject {
+		log.Fatal("Accept state and reject state cannot be the same state.")
+	}
+	return turingMachine{trans, start, accept, reject}
+}
+
+func (tm turingMachine) Start(input string) Config {
 	return Config{tm.StartState, strings.Fields(input), 0}
 }
 
-func (tm *TuringMachine) Step(conf Config) Config {
+func (tm turingMachine) Step(conf Config) Config {
 	state := conf.State
 
 	// if the state is accept or reject, then don't do anything
@@ -43,7 +57,7 @@ func (tm *TuringMachine) Step(conf Config) Config {
 	return next(conf, next_state, next_symbol, next_move)
 }
 
-func (tm *TuringMachine) findTransition(state string, symbol string) (string, string, string, error) {
+func (tm turingMachine) findTransition(state string, symbol string) (string, string, string, error) {
 	for _, trans := range tm.Trans {
 		if (trans.In == Input{state, symbol}) {
 			return trans.Out.State, trans.Out.Symbol, trans.Out.Move, nil

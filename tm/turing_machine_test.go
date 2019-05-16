@@ -14,7 +14,7 @@ func toString(conf tm.Config) string {
 
 // Let's make some TMs to use for testing
 // All are over the language {a, b, c}
-var tmEmpty = tm.TuringMachine{
+var tmEmpty = tm.NewTuringMachine(
 	[]tm.Transition{
 		{tm.Input{"start", "a"}, tm.Output{"reject", "a", tm.Right}},
 		{tm.Input{"start", "b"}, tm.Output{"reject", "b", tm.Right}},
@@ -23,9 +23,9 @@ var tmEmpty = tm.TuringMachine{
 	},
 	"start",
 	"accept",
-	"reject"}
+	"reject")
 
-var tmAll = tm.TuringMachine{
+var tmAll = tm.NewTuringMachine(
 	[]tm.Transition{
 		{tm.Input{"q0", "a"}, tm.Output{"accept", "a", tm.Right}},
 		{tm.Input{"q0", "b"}, tm.Output{"accept", "b", tm.Right}},
@@ -34,9 +34,9 @@ var tmAll = tm.TuringMachine{
 	},
 	"q0",
 	"accept",
-	"reject"}
+	"reject")
 
-var tmAddMarkers = tm.TuringMachine{
+var tmAddMarkers = tm.NewTuringMachine(
 	[]tm.Transition{
 		{tm.Input{"place$", "a"}, tm.Output{"placeA", "$", tm.Right}},
 		{tm.Input{"place$", "b"}, tm.Output{"placeB", "$", tm.Right}},
@@ -76,9 +76,9 @@ var tmAddMarkers = tm.TuringMachine{
 	},
 	"place$",
 	"accept",
-	"reject"}
+	"reject")
 
-var tmMoveRight = tm.TuringMachine{
+var tmMoveRight = tm.NewTuringMachine(
 	[]tm.Transition{
 		{tm.Input{"moveRight", "a"}, tm.Output{"moveRight", "a", tm.Right}},
 		{tm.Input{"moveRight", "b"}, tm.Output{"moveRight", "b", tm.Right}},
@@ -87,9 +87,9 @@ var tmMoveRight = tm.TuringMachine{
 	},
 	"moveRight",
 	"accept",
-	"reject"}
+	"reject")
 
-var tmMoveLeft = tm.TuringMachine{
+var tmMoveLeft = tm.NewTuringMachine(
 	[]tm.Transition{
 		{tm.Input{"moveLeft", "a"}, tm.Output{"moveLeft", "a", tm.Left}},
 		{tm.Input{"moveLeft", "b"}, tm.Output{"moveLeft", "b", tm.Left}},
@@ -98,20 +98,20 @@ var tmMoveLeft = tm.TuringMachine{
 	},
 	"moveLeft",
 	"accept",
-	"reject"}
+	"reject")
 
 // TM over the language {longSymbol}
-var tmLongSymbol = tm.TuringMachine{
+var tmLongSymbol = tm.NewTuringMachine(
 	[]tm.Transition{
 		{tm.Input{"start", "longSymbol"}, tm.Output{"accept", "longSymbol", tm.Right}},
 		{tm.Input{"start", tm.Blank}, tm.Output{"reject", tm.Blank, tm.Right}},
 	},
 	"start",
 	"accept",
-	"reject"}
+	"reject")
 
 // TM over the language {a, A}
-var tmCaseSens = tm.TuringMachine{
+var tmCaseSens = tm.NewTuringMachine(
 	[]tm.Transition{
 		{tm.Input{"start", "a"}, tm.Output{"accept", "b", tm.Right}},
 		{tm.Input{"start", "A"}, tm.Output{"reject", "B", tm.Right}},
@@ -119,26 +119,26 @@ var tmCaseSens = tm.TuringMachine{
 	},
 	"start",
 	"accept",
-	"reject"}
+	"reject")
 
 // TM over the language {a}
-var tmBlankRight = tm.TuringMachine{
+var tmBlankRight = tm.NewTuringMachine(
 	[]tm.Transition{
 		{tm.Input{"any", "a"}, tm.Output{"any", tm.Blank, tm.Right}},
 		{tm.Input{"any", tm.Blank}, tm.Output{"any", tm.Blank, tm.Right}},
 	},
 	"any",
 	"accept",
-	"reject"}
+	"reject")
 
-var tmBlankLeft = tm.TuringMachine{
+var tmBlankLeft = tm.NewTuringMachine(
 	[]tm.Transition{
 		{tm.Input{"any", "a"}, tm.Output{"any", tm.Blank, tm.Left}},
 		{tm.Input{"any", tm.Blank}, tm.Output{"any", tm.Blank, tm.Left}},
 	},
 	"any",
 	"accept",
-	"reject"}
+	"reject")
 
 // Testing Start
 
