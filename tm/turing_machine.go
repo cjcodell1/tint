@@ -7,13 +7,13 @@ import (
 
 const (
 	Blank string = "_"
-	Accept string = "accept"
-	Reject string = "reject"
 )
 
 type TuringMachine struct {
 	Trans []Transition
 	StartState string
+	AcceptState string
+	RejectState string
 }
 
 func (tm *TuringMachine) Start(input string) Config {
@@ -24,7 +24,7 @@ func (tm *TuringMachine) Step(conf Config) Config {
 	state := conf.State
 
 	// if the state is accept or reject, then don't do anything
-	if (state == Accept) || (state == Reject) {
+	if (state == tm.AcceptState) || (state == tm.RejectState) {
 		return conf
 	}
 

@@ -16,21 +16,25 @@ func toString(conf tm.Config) string {
 // All are over the language {a, b, c}
 var tmEmpty = tm.TuringMachine{
 	[]tm.Transition{
-		{tm.Input{"start", "a"}, tm.Output{tm.Reject, "a", tm.Right}},
-		{tm.Input{"start", "b"}, tm.Output{tm.Reject, "b", tm.Right}},
-		{tm.Input{"start", "c"}, tm.Output{tm.Reject, "c", tm.Right}},
-		{tm.Input{"start", tm.Blank}, tm.Output{tm.Reject, tm.Blank, tm.Right}},
+		{tm.Input{"start", "a"}, tm.Output{"reject", "a", tm.Right}},
+		{tm.Input{"start", "b"}, tm.Output{"reject", "b", tm.Right}},
+		{tm.Input{"start", "c"}, tm.Output{"reject", "c", tm.Right}},
+		{tm.Input{"start", tm.Blank}, tm.Output{"reject", tm.Blank, tm.Right}},
 	},
-	"start"}
+	"start",
+	"accept",
+	"reject"}
 
 var tmAll = tm.TuringMachine{
 	[]tm.Transition{
-		{tm.Input{"q0", "a"}, tm.Output{tm.Accept, "a", tm.Right}},
-		{tm.Input{"q0", "b"}, tm.Output{tm.Accept, "b", tm.Right}},
-		{tm.Input{"q0", "c"}, tm.Output{tm.Accept, "c", tm.Right}},
-		{tm.Input{"q0", tm.Blank}, tm.Output{tm.Accept, tm.Blank, tm.Right}},
+		{tm.Input{"q0", "a"}, tm.Output{"accept", "a", tm.Right}},
+		{tm.Input{"q0", "b"}, tm.Output{"accept", "b", tm.Right}},
+		{tm.Input{"q0", "c"}, tm.Output{"accept", "c", tm.Right}},
+		{tm.Input{"q0", tm.Blank}, tm.Output{"accept", tm.Blank, tm.Right}},
 	},
-	"q0"}
+	"q0",
+	"accept",
+	"reject"}
 
 var tmAddMarkers = tm.TuringMachine{
 	[]tm.Transition{
@@ -38,39 +42,41 @@ var tmAddMarkers = tm.TuringMachine{
 		{tm.Input{"place$", "b"}, tm.Output{"placeB", "$", tm.Right}},
 		{tm.Input{"place$", "c"}, tm.Output{"placeC", "$", tm.Right}},
 		{tm.Input{"place$", tm.Blank}, tm.Output{"placeLast$", "$", tm.Right}},
-		{tm.Input{"place$", "$"}, tm.Output{tm.Reject, "$", tm.Right}},
+		{tm.Input{"place$", "$"}, tm.Output{"reject", "$", tm.Right}},
 
 		{tm.Input{"placeA", "a"}, tm.Output{"placeA", "a", tm.Right}},
 		{tm.Input{"placeA", "b"}, tm.Output{"placeB", "a", tm.Right}},
 		{tm.Input{"placeA", "c"}, tm.Output{"placeC", "a", tm.Right}},
 		{tm.Input{"placeA", tm.Blank}, tm.Output{"placeLast$", "a", tm.Right}},
-		{tm.Input{"placeA", "$"}, tm.Output{tm.Reject, "$", tm.Right}},
+		{tm.Input{"placeA", "$"}, tm.Output{"reject", "$", tm.Right}},
 
 		{tm.Input{"placeB", "a"}, tm.Output{"placeA", "b", tm.Right}},
 		{tm.Input{"placeB", "b"}, tm.Output{"placeB", "b", tm.Right}},
 		{tm.Input{"placeB", "c"}, tm.Output{"placeC", "b", tm.Right}},
 		{tm.Input{"placeB", tm.Blank}, tm.Output{"placeLast$", "b", tm.Right}},
-		{tm.Input{"placeB", "$"}, tm.Output{tm.Reject, "$", tm.Right}},
+		{tm.Input{"placeB", "$"}, tm.Output{"reject", "$", tm.Right}},
 
 		{tm.Input{"placeC", "a"}, tm.Output{"placeA", "c", tm.Right}},
 		{tm.Input{"placeC", "b"}, tm.Output{"placeB", "c", tm.Right}},
 		{tm.Input{"placeC", "c"}, tm.Output{"placeC", "c", tm.Right}},
 		{tm.Input{"placeC", tm.Blank}, tm.Output{"placeLast$", "c", tm.Right}},
-		{tm.Input{"placeC", "$"}, tm.Output{tm.Reject, "$", tm.Right}},
+		{tm.Input{"placeC", "$"}, tm.Output{"reject", "$", tm.Right}},
 
-		{tm.Input{"placeLast$", "a"}, tm.Output{tm.Reject, "a", tm.Right}},
-		{tm.Input{"placeLast$", "b"}, tm.Output{tm.Reject, "b", tm.Right}},
-		{tm.Input{"placeLast$", "c"}, tm.Output{tm.Reject, "c", tm.Right}},
+		{tm.Input{"placeLast$", "a"}, tm.Output{"reject", "a", tm.Right}},
+		{tm.Input{"placeLast$", "b"}, tm.Output{"reject", "b", tm.Right}},
+		{tm.Input{"placeLast$", "c"}, tm.Output{"reject", "c", tm.Right}},
 		{tm.Input{"placeLast$", tm.Blank}, tm.Output{"returnToStart", "$", tm.Left}},
-		{tm.Input{"placeLast$", "$"}, tm.Output{tm.Reject, "$", tm.Right}},
+		{tm.Input{"placeLast$", "$"}, tm.Output{"reject", "$", tm.Right}},
 
 		{tm.Input{"returnToStart", "a"}, tm.Output{"returnToStart", "a", tm.Left}},
 		{tm.Input{"returnToStart", "b"}, tm.Output{"returnToStart", "b", tm.Left}},
 		{tm.Input{"returnToStart", "c"}, tm.Output{"returnToStart", "c", tm.Left}},
-		{tm.Input{"returnToStart", tm.Blank}, tm.Output{tm.Reject, tm.Blank, tm.Left}},
-		{tm.Input{"returnToStart", "$"}, tm.Output{tm.Accept, "$", tm.Left}},
+		{tm.Input{"returnToStart", tm.Blank}, tm.Output{"reject", tm.Blank, tm.Left}},
+		{tm.Input{"returnToStart", "$"}, tm.Output{"accept", "$", tm.Left}},
 	},
-	"place$"}
+	"place$",
+	"accept",
+	"reject"}
 
 var tmMoveRight = tm.TuringMachine{
 	[]tm.Transition{
@@ -79,7 +85,9 @@ var tmMoveRight = tm.TuringMachine{
 		{tm.Input{"moveRight", "c"}, tm.Output{"moveRight", "c", tm.Right}},
 		{tm.Input{"moveRight", tm.Blank}, tm.Output{"moveRight", tm.Blank, tm.Right}},
 	},
-	"moveRight"}
+	"moveRight",
+	"accept",
+	"reject"}
 
 var tmMoveLeft = tm.TuringMachine{
 	[]tm.Transition{
@@ -88,24 +96,30 @@ var tmMoveLeft = tm.TuringMachine{
 		{tm.Input{"moveLeft", "c"}, tm.Output{"moveLeft", "c", tm.Left}},
 		{tm.Input{"moveLeft", tm.Blank}, tm.Output{"moveLeft", tm.Blank, tm.Left}},
 	},
-	"moveLeft"}
+	"moveLeft",
+	"accept",
+	"reject"}
 
 // TM over the language {longSymbol}
 var tmLongSymbol = tm.TuringMachine{
 	[]tm.Transition{
-		{tm.Input{"start", "longSymbol"}, tm.Output{tm.Accept, "longSymbol", tm.Right}},
-		{tm.Input{"start", tm.Blank}, tm.Output{tm.Reject, tm.Blank, tm.Right}},
+		{tm.Input{"start", "longSymbol"}, tm.Output{"accept", "longSymbol", tm.Right}},
+		{tm.Input{"start", tm.Blank}, tm.Output{"reject", tm.Blank, tm.Right}},
 	},
-	"start"}
+	"start",
+	"accept",
+	"reject"}
 
 // TM over the language {a, A}
 var tmCaseSens = tm.TuringMachine{
 	[]tm.Transition{
-		{tm.Input{"start", "a"}, tm.Output{tm.Accept, "b", tm.Right}},
-		{tm.Input{"start", "A"}, tm.Output{tm.Reject, "B", tm.Right}},
-		{tm.Input{"start", tm.Blank}, tm.Output{tm.Reject, tm.Blank, tm.Right}},
+		{tm.Input{"start", "a"}, tm.Output{"accept", "b", tm.Right}},
+		{tm.Input{"start", "A"}, tm.Output{"reject", "B", tm.Right}},
+		{tm.Input{"start", tm.Blank}, tm.Output{"reject", tm.Blank, tm.Right}},
 	},
-	"start"}
+	"start",
+	"accept",
+	"reject"}
 
 // TM over the language {a}
 var tmBlankRight = tm.TuringMachine{
@@ -113,14 +127,18 @@ var tmBlankRight = tm.TuringMachine{
 		{tm.Input{"any", "a"}, tm.Output{"any", tm.Blank, tm.Right}},
 		{tm.Input{"any", tm.Blank}, tm.Output{"any", tm.Blank, tm.Right}},
 	},
-	"any"}
+	"any",
+	"accept",
+	"reject"}
 
 var tmBlankLeft = tm.TuringMachine{
 	[]tm.Transition{
 		{tm.Input{"any", "a"}, tm.Output{"any", tm.Blank, tm.Left}},
 		{tm.Input{"any", tm.Blank}, tm.Output{"any", tm.Blank, tm.Left}},
 	},
-	"any"}
+	"any",
+	"accept",
+	"reject"}
 
 // Testing Start
 
@@ -162,19 +180,19 @@ type StepTest struct {
 }
 
 var stepTests = []StepTest{
-	{tmEmpty, "tmEmpty", tm.Config{"start", []string{}, 0}, tm.Config{tm.Reject, []string{}, 0}},
-	{tmEmpty, "tmEmpty", tm.Config{"start", []string{"a"}, 0}, tm.Config{tm.Reject, []string{"a"}, 1}},
-	{tmEmpty, "tmEmpty", tm.Config{"start", []string{"a", "a"}, 0}, tm.Config{tm.Reject, []string{"a", "a"}, 1}},
-	{tmEmpty, "tmEmpty", tm.Config{tm.Reject, []string{"a", "a"}, 1}, tm.Config{tm.Reject, []string{"a", "a"}, 1}},
+	{tmEmpty, "tmEmpty", tm.Config{"start", []string{}, 0}, tm.Config{"reject", []string{}, 0}},
+	{tmEmpty, "tmEmpty", tm.Config{"start", []string{"a"}, 0}, tm.Config{"reject", []string{"a"}, 1}},
+	{tmEmpty, "tmEmpty", tm.Config{"start", []string{"a", "a"}, 0}, tm.Config{"reject", []string{"a", "a"}, 1}},
+	{tmEmpty, "tmEmpty", tm.Config{"reject", []string{"a", "a"}, 1}, tm.Config{"reject", []string{"a", "a"}, 1}},
 
-	{tmAll, "tmAll", tm.Config{"q0", []string{}, 0}, tm.Config{tm.Accept, []string{}, 0}},
-	{tmAll, "tmAll", tm.Config{"q0", []string{"c"}, 0}, tm.Config{tm.Accept, []string{"c"}, 1}},
-	{tmAll, "tmAll", tm.Config{"q0", []string{"c", "a"}, 0}, tm.Config{tm.Accept, []string{"c", "a"}, 1}},
-	{tmAll, "tmAll", tm.Config{tm.Accept, []string{"c", "a"}, 1}, tm.Config{tm.Accept, []string{"c", "a"}, 1}},
+	{tmAll, "tmAll", tm.Config{"q0", []string{}, 0}, tm.Config{"accept", []string{}, 0}},
+	{tmAll, "tmAll", tm.Config{"q0", []string{"c"}, 0}, tm.Config{"accept", []string{"c"}, 1}},
+	{tmAll, "tmAll", tm.Config{"q0", []string{"c", "a"}, 0}, tm.Config{"accept", []string{"c", "a"}, 1}},
+	{tmAll, "tmAll", tm.Config{"accept", []string{"c", "a"}, 1}, tm.Config{"accept", []string{"c", "a"}, 1}},
 
 	{tmAddMarkers, "tmAddMarkers", tm.Config{"place$", []string{}, 0}, tm.Config{"placeLast$", []string{"$"}, 1}},
 	{tmAddMarkers, "tmAddMarkers", tm.Config{"placeLast$", []string{"$"}, 1}, tm.Config{"returnToStart", []string{"$", "$"}, 0}},
-	{tmAddMarkers, "tmAddMarkers", tm.Config{"returnToStart", []string{"$", "$"}, 0}, tm.Config{tm.Accept, []string{"$", "$"}, 0}},
+	{tmAddMarkers, "tmAddMarkers", tm.Config{"returnToStart", []string{"$", "$"}, 0}, tm.Config{"accept", []string{"$", "$"}, 0}},
 	{tmAddMarkers, "tmAddMarkers", tm.Config{"place$", []string{"c", "b", "a"}, 0}, tm.Config{"placeC", []string{"$", "b", "a"}, 1}},
 	{tmAddMarkers, "tmAddMarkers", tm.Config{"placeC", []string{"$", "b", "a"}, 1}, tm.Config{"placeB", []string{"$", "c", "a"}, 2}},
 	{tmAddMarkers, "tmAddMarkers", tm.Config{"placeB", []string{"$", "c", "a"}, 2}, tm.Config{"placeA", []string{"$", "c", "b"}, 3}},
@@ -183,7 +201,7 @@ var stepTests = []StepTest{
 	{tmAddMarkers, "tmAddMarkers", tm.Config{"returnToStart", []string{"$", "c", "b", "a", "$"}, 3}, tm.Config{"returnToStart", []string{"$", "c", "b", "a", "$"}, 2}},
 	{tmAddMarkers, "tmAddMarkers", tm.Config{"returnToStart", []string{"$", "c", "b", "a", "$"}, 2}, tm.Config{"returnToStart", []string{"$", "c", "b", "a", "$"}, 1}},
 	{tmAddMarkers, "tmAddMarkers", tm.Config{"returnToStart", []string{"$", "c", "b", "a", "$"}, 1}, tm.Config{"returnToStart", []string{"$", "c", "b", "a", "$"}, 0}},
-	{tmAddMarkers, "tmAddMarkers", tm.Config{"returnToStart", []string{"$", "c", "b", "a", "$"}, 0}, tm.Config{tm.Accept, []string{"$", "c", "b", "a", "$"}, 0}},
+	{tmAddMarkers, "tmAddMarkers", tm.Config{"returnToStart", []string{"$", "c", "b", "a", "$"}, 0}, tm.Config{"accept", []string{"$", "c", "b", "a", "$"}, 0}},
 
 	{tmBlankRight, "tmBlankRight", tm.Config{"any", []string{}, 0}, tm.Config{"any", []string{}, 0}},
 	{tmBlankRight, "tmBlankRight", tm.Config{"any", []string{"a"}, 0}, tm.Config{"any", []string{}, 0}},
@@ -200,8 +218,8 @@ var stepTests = []StepTest{
 
 	{tmMoveLeft, "tmMoveLeft", tm.Config{"moveLeft", []string{"a", "b", "c"}, 0}, tm.Config{"moveLeft", []string{"a", "b", "c"}, 0}},
 
-	{tmCaseSens, "tmCaseSens", tm.Config{"start", []string{"a"}, 0}, tm.Config{tm.Accept, []string{"b"}, 1}},
-	{tmCaseSens, "tmCaseSens", tm.Config{"start", []string{"A"}, 0}, tm.Config{tm.Reject, []string{"B"}, 1}},
+	{tmCaseSens, "tmCaseSens", tm.Config{"start", []string{"a"}, 0}, tm.Config{"accept", []string{"b"}, 1}},
+	{tmCaseSens, "tmCaseSens", tm.Config{"start", []string{"A"}, 0}, tm.Config{"reject", []string{"B"}, 1}},
 }
 
 func TestStep(t *testing.T) {
