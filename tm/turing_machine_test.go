@@ -149,7 +149,7 @@ type StartTest struct {
 	expect tm.Config
 }
 
-var startTests = []StartTest{
+var startTests = []StartTest {
 	{tmEmpty, "tmEmpty", "", tm.Config{"start", []string{}, 0}},
 	{tmEmpty, "tmEmpty", "a", tm.Config{"start", []string{"a"}, 0}},
 	{tmEmpty, "tmEmpty", "b", tm.Config{"start", []string{"b"}, 0}},

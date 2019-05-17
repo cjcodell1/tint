@@ -5,26 +5,35 @@ import (
 
 	"gopkg.in/yaml.v3"
 	"github.com/cjcodell1/tint/tm"
+	"github.com/cjcodell1/tint/file-reader"
 )
 
 type TMBuilder struct {
-	Start string
-	Accept string
-	Reject string
-	Transitions [][5]string
+	start string
+	accept string
+	reject string
+	transitions [][5]string
 }
 
-func build(config string) tm.TuringMachine {
+func Build(configPath string) tm.TuringMachine, error{
+
+	config, err file-reader.ReadAll(configPath)
+	if err != nil {
+		return nil, err
+	}
+
 	builder := TMBuilder{}
 
 	err := yaml.Unmarshal([]byte(config), &builder)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	// OK -- now I've got a Builder I need to use
-	// I want to do some ensurance tests (checking the accept state != reject)
-	// So I need to create a NewTuringMachine function in my turing machine file.
-	// I can not export the struct (lower case), but still export the fields (keeping the caps)
-	// Use this function to return the actual TuringMachine 
+	tm, err := tm.NewTuringMachine(builder.transitions, builder.start, builder.accept, builder.reject)
+	if err != nil {
+		return nil, err
+	}
+
+	return tm, nil
+
 }
