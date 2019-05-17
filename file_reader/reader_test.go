@@ -6,13 +6,13 @@ import (
 	"github.com/cjcodell1/tint/file_reader"
 )
 
-type ReadAllTest struct {
+type readAllTest struct {
 	path string
 	expect string
 	isErrNil bool
 }
 
-var readAllTests = []ReadAllTest {
+var readAllTests = []readAllTest {
 	{"examples/file1", "", true},
 	{"examples/file2", "abc", true},
 	{"examples/file3", "a\nb\nc", true},

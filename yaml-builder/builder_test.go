@@ -1,9 +1,9 @@
-package yaml-builder-test
+package yaml_builder_test
 
 import (
-	"testing"
+    "testing"
 
-	"github.com/cjcodell1/tint/yaml-builder"
+    "github.com/cjcodell1/tint/yaml_builder"
 )
 
 
