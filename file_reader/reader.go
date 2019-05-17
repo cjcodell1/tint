@@ -14,8 +14,8 @@ func ReadAll(path string) (string, error) {
 	var contents strings.Builder
 	readTo := make([]byte, 50)
 	for n, err := f.Read(readTo); (n != 0) && (err != io.EOF); n, err = f.Read(readTo) {
-		toWrite := readTo[:n-1] // to remove last newline
-		contents.WriteString(string(toWrite))
+		// REMOVE ALL THE EMPTY BYTES AT THE END OF THE SLICE
+		contents.WriteString(string(readTo))
 	}
 
 	return contents.String(), nil
