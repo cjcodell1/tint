@@ -1,8 +1,6 @@
 package yaml_builder
 
 import (
-	"fmt"
-	"strings"
 
     "gopkg.in/yaml.v2"
     "github.com/cjcodell1/tint/tm"
@@ -23,7 +21,6 @@ func Build(configPath string) (tm.TuringMachine, error) {
         return nil, errRead
     }
 
-	fmt.Println(config)
     var builder tmBuilder
 
     errUnMarsh := yaml.Unmarshal([]byte(config), &builder)
@@ -31,17 +28,9 @@ func Build(configPath string) (tm.TuringMachine, error) {
         return nil, errUnMarsh
     }
 
-	fmt.Println(builder.Start)
-	fmt.Println(builder.Accept)
-	fmt.Println(builder.Reject)
-	for _, t := range builder.Transitions {
-		fmt.Println(strings.Join(t[:], " "))
-	}
-
-
     var trans []tm.Transition
-    for i, t := range builder.Transitions {
-        trans[i] = tm.Transition{tm.Input{t[0], builder.Transitions[i][1]}, tm.Output{t[2], builder.Transitions[i][3], builder.Transitions[i][4]}}
+    for _, t := range builder.Transitions {
+        trans = append(trans, tm.Transition{tm.Input{t[0], t[1]}, tm.Output{t[2], t[3], t[4]}})
     }
 
     tm := tm.NewTuringMachine(trans, builder.Start, builder.Accept, builder.Reject)

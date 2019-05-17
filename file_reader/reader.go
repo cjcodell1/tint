@@ -2,8 +2,7 @@ package file_reader
 
 import (
 	"os"
-	"io"
-	"strings"
+	"io/ioutil"
 )
 
 func ReadAll(path string) (string, error) {
@@ -11,12 +10,11 @@ func ReadAll(path string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	var contents strings.Builder
-	readTo := make([]byte, 50)
-	for n, err := f.Read(readTo); (n != 0) && (err != io.EOF); n, err = f.Read(readTo) {
-		// REMOVE ALL THE EMPTY BYTES AT THE END OF THE SLICE
-		contents.WriteString(string(readTo))
+
+	contents, err := ioutil.ReadAll(f)
+	if err != nil {
+		return "", err
 	}
 
-	return contents.String(), nil
+	return string(contents), nil
 }

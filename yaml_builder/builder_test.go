@@ -13,9 +13,9 @@ type buildTest struct {
 
 var buildTests = []buildTest{
     {"examples/config1.yaml", true},
-    //{"examples/config2.yaml", true},
-    //{"examples/config3.yaml", true},
-    //{"examples/config4.yaml", true},
+    {"examples/config2.yaml", true},
+    {"examples/config3.yaml", true},
+    {"examples/config4.yaml", true},
 }
 
 func TestBuild(t *testing.T) {
