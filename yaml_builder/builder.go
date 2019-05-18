@@ -8,6 +8,7 @@ import (
 )
 
 type tmBuilder struct {
+	// These must be exported, yaml package requires them
     Start string
     Accept string
     Reject string
@@ -33,11 +34,10 @@ func Build(configPath string) (tm.TuringMachine, error) {
         trans = append(trans, tm.Transition{tm.Input{t[0], t[1]}, tm.Output{t[2], t[3], t[4]}})
     }
 
-    tm := tm.NewTuringMachine(trans, builder.Start, builder.Accept, builder.Reject)
-    //tm, errBuild := tm.NewTuringMachine(trans, builder.Start, builder.Accept, builder.Reject)
-    //if errBuild != nil {
-    //    return nil, errBuild
-    //}
+    tm, errBuild := tm.NewTuringMachine(trans, builder.Start, builder.Accept, builder.Reject)
+    if errBuild != nil {
+        return nil, errBuild
+    }
 
     return tm, nil
 
