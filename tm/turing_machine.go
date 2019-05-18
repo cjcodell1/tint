@@ -3,7 +3,6 @@ package tm
 import (
     "fmt"
     "strings"
-    "log"
 )
 
 const (
@@ -13,7 +12,7 @@ const (
 
 type TuringMachine interface {
     Start(input string) Config
-    Step(conf Config) Config
+    Step(conf Config) (Config, error)
 }
 
 type turingMachine struct {
@@ -23,23 +22,23 @@ type turingMachine struct {
     RejectState string
 }
 
-func NewTuringMachine(trans []Transition, start string, accept string, reject string) turingMachine {
+func NewTuringMachine(trans []Transition, start string, accept string, reject string) (TuringMachine, error) {
     if accept == reject {
-        log.Fatal("Accept state and reject state cannot be the same state.")
+		return turingMachine{}, fmt.Errorf("%s cannot be both the accept state and the reject state.", accept)
     }
-    return turingMachine{trans, start, accept, reject}
+    return turingMachine{trans, start, accept, reject}, nil
 }
 
 func (tm turingMachine) Start(input string) Config {
     return Config{tm.StartState, strings.Fields(input), 0}
 }
 
-func (tm turingMachine) Step(conf Config) Config {
+func (tm turingMachine) Step(conf Config) (Config, error) {
     state := conf.State
 
     // if the state is accept or reject, then don't do anything
     if (state == tm.AcceptState) || (state == tm.RejectState) {
-        return conf
+        return conf, nil
     }
 
     var symbol string
@@ -52,9 +51,9 @@ func (tm turingMachine) Step(conf Config) Config {
     next_state, next_symbol, next_move, err := tm.findTransition(state, symbol)
 
     if err != nil {
-        panic(err)
+        return Config{}, err
     }
-    return next(conf, next_state, next_symbol, next_move)
+    return next(conf, next_state, next_symbol, next_move), nil
 }
 
 func (tm turingMachine) findTransition(state string, symbol string) (string, string, string, error) {
