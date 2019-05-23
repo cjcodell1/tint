@@ -13,6 +13,8 @@ const (
 type TuringMachine interface {
     Start(input string) Config
     Step(conf Config) (Config, error)
+    IsAccept(conf Config) bool
+    IsReject(conf Config) bool
 }
 
 type turingMachine struct {
@@ -37,7 +39,7 @@ func (tm turingMachine) Step(conf Config) (Config, error) {
     state := conf.State
 
     // if the state is accept or reject, then don't do anything
-    if (state == tm.AcceptState) || (state == tm.RejectState) {
+    if (tm.IsAccept(conf)) || (tm.IsReject(conf)) {
         return conf, nil
     }
 
@@ -55,6 +57,15 @@ func (tm turingMachine) Step(conf Config) (Config, error) {
     }
     return next(conf, next_state, next_symbol, next_move), nil
 }
+
+func (tm turingMachine) IsAccept(conf Config) bool {
+    return tm.AcceptState == conf.State
+}
+
+func (tm turingMachine) IsReject(conf Config) bool {
+    return tm.RejectState == conf.State
+}
+
 
 func (tm turingMachine) findTransition(state string, symbol string) (string, string, string, error) {
     for _, trans := range tm.Trans {
