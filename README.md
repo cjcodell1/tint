@@ -10,6 +10,11 @@ When I learned about finite state automata as an undergraduate, my favorite part
 
 ## Plans
 
-- [ ] Config files to build Turing machines
-- [ ] CLI to build and test Turing machines
-- [ ] QoL changes
+- [x] Configuration files to build Turing machines.
+    - Can build a Turing machine from a YAML file.
+    - Documentation to come with the CLI.
+- [ ] CLI to build and test Turing machines.
+    - Supply a YAML Turing machine specification and a single test or a file containing multiple tests.
+- [ ] QoL changes.
+    - Use \* to specify "all other" symbols, instead of having to list every possible symbol.
+    - Stepper to step forward through a test.
