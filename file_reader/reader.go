@@ -1,26 +1,26 @@
 package file_reader
 
 import (
-	"os"
+    "os"
     "io"
-	"io/ioutil"
+    "io/ioutil"
     "bufio"
     "strings"
 )
 
 func ReadAll(path string) (string, error) {
-	f, err := os.Open(path)
+    f, err := os.Open(path)
     defer f.Close()
-	if err != nil {
-		return "", err
-	}
+    if err != nil {
+        return "", err
+    }
 
-	contents, err := ioutil.ReadAll(f)
-	if err != nil {
-		return "", err
-	}
+    contents, err := ioutil.ReadAll(f)
+    if err != nil {
+        return "", err
+    }
 
-	return string(contents), nil
+    return string(contents), nil
 }
 
 func Lines(path string) ([]string, error) {

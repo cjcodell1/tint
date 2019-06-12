@@ -8,7 +8,7 @@ import (
 )
 
 type tmBuilder struct {
-	// These must be exported, yaml package requires them
+    // These must be exported, yaml package requires them
     Start string
     Accept string
     Reject string

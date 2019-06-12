@@ -22,20 +22,20 @@ func TestBuild(t *testing.T) {
     for _, tc := range buildTests {
         _, gotErr := yaml_builder.Build(tc.path)
         if (tc.isErrNil && (gotErr != nil)) {
-			var expectErr string
-			if tc.isErrNil {
-				expectErr = "nil"
-			} else {
-				expectErr = "non-nil"
-			}
+            var expectErr string
+            if tc.isErrNil {
+                expectErr = "nil"
+            } else {
+                expectErr = "non-nil"
+            }
 
-			if gotErr == nil {
-				t.Errorf("Build(%s) == some_tm, %s != some_tm, %s", tc.path, "nil", expectErr)
-			} else {
-				//t.Errorf("Build(%s) == some_tm, %s != some_tm, %s", tc.path, gotErr.Error(), expectErr)
-				t.Error(gotErr.Error())
-			}
+            if gotErr == nil {
+                t.Errorf("Build(%s) == some_tm, %s != some_tm, %s", tc.path, "nil", expectErr)
+            } else {
+                //t.Errorf("Build(%s) == some_tm, %s != some_tm, %s", tc.path, gotErr.Error(), expectErr)
+                t.Error(gotErr.Error())
+            }
 
-		}
-	}
+        }
+    }
 }
