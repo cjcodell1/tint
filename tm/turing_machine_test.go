@@ -84,7 +84,7 @@ type stepTest struct {
     tmName string
     input tm.Config
     expect tm.Config
-	isErrNil bool
+    isErrNil bool
 }
 
 var stepTests = []stepTest{
@@ -134,20 +134,20 @@ func TestStep(t *testing.T) {
     for _, tc := range stepTests {
         got, gotErr := tc.tm.Step(tc.input)
 
-		var errString string
-		if tc.isErrNil {
-			errString = "nil"
-		} else {
-			errString = "not-nil"
-		}
+        var errString string
+        if tc.isErrNil {
+            errString = "nil"
+        } else {
+            errString = "not-nil"
+        }
 
         if (toString(tc.expect) != toString(got)) || (tc.isErrNil && (gotErr != nil)) {
-			if gotErr == nil {
-				t.Errorf("%s.Step(%s) == %s, %s != %s, %s", tc.tmName, toString(tc.input), toString(got), "nil", toString(tc.expect), errString)
-			} else {
-				t.Errorf("%s.Step(%s) == %s, %s != %s, %s", tc.tmName, toString(tc.input), toString(got), gotErr.Error(), toString(tc.expect), errString)
-			}
-		}
+            if gotErr == nil {
+                t.Errorf("%s.Step(%s) == %s, %s != %s, %s", tc.tmName, toString(tc.input), toString(got), "nil", toString(tc.expect), errString)
+            } else {
+                t.Errorf("%s.Step(%s) == %s, %s != %s, %s", tc.tmName, toString(tc.input), toString(got), gotErr.Error(), toString(tc.expect), errString)
+            }
+        }
     }
 }
 

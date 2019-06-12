@@ -26,7 +26,7 @@ type turingMachine struct {
 
 func NewTuringMachine(trans []Transition, start string, accept string, reject string) (TuringMachine, error) {
     if accept == reject {
-		return turingMachine{}, fmt.Errorf("%s cannot be both the accept state and the reject state.", accept)
+        return turingMachine{}, fmt.Errorf("%s cannot be both the accept state and the reject state.", accept)
     }
     return turingMachine{trans, start, accept, reject}, nil
 }
