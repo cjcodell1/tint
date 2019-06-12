@@ -73,17 +73,17 @@ func Run() {
 
     // start TM with test
     for _, input := range tests {
-        fmt.Printf("Simulating with %q.", input)
+        fmt.Printf("Simulating with %q.\n", input)
         var conf tm.Config
-        for conf = machine.Start(input); !machine.IsAccept(conf) || !machine.IsReject(conf); conf, err = machine.Step(conf) {
+        for conf = machine.Start(input); !(machine.IsAccept(conf) || machine.IsReject(conf)); conf, err = machine.Step(conf) {
             if verboseFlag {
                 fmt.Println(simplePrintConf(conf))
             }
         }
         if machine.IsAccept(conf) {
-            fmt.Println("Accepted.")
+            fmt.Println("Accepted.\n")
         } else {
-            fmt.Println("Rejected.")
+            fmt.Println("Rejected.\n")
         }
     }
 }
