@@ -8,3 +8,4 @@ transitions:
     - ["start", "a", "reject", "x", "R"]
     - ["start", "b", "reject", "x", "R"]
     - ["start", "_", "reject", "x", "R"]
+

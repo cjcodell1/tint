@@ -1,3 +1,4 @@
+---
 # recognizes {a^n | n \equiv 2 \mod 5}
 # over alphabet {a}
 
