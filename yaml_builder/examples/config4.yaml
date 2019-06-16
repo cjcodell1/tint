@@ -20,7 +20,7 @@ transitions:
 
     # look for "$" and start the macro 2
     - [return, a, return, a, L]
-    - [reutrn, "$", zero, "$", R]
+    - [return, "$", zero, "$", R]
 
     ### Macro 2 -- count the "a"s reset after 5, accept if ended with 2
     # have zero "a"
