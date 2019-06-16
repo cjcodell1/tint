@@ -37,6 +37,8 @@ func worker(jobs <-chan Job, results chan<- Result, wg *sync.WaitGroup) {
 
         }
 
+        // need to append the Accept or Reject config to the slice
+        confs = append(confs, conf)
         result = Result{j.Id, j.Input, j.TM, confs}
         results <- result
     }
