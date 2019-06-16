@@ -79,25 +79,30 @@ func (tm turingMachine) findTransition(state string, symbol string) (string, str
 }
 
 func next(conf Config, next_state string, next_symbol string, next_move string) Config {
+    // don't want to mutate conf.Tape
+    var prevTape = make([]string, len(conf.Tape))
+    copy(prevTape, conf.Tape)
+
+
     var next_conf Config
     // transition to the next state
     next_conf.State = next_state
 
-    leng := len(conf.Tape)
+    leng := len(prevTape)
     index := conf.Index
 
     // write the next symbol
     if (index == leng) && (next_symbol == Blank) {
-        next_conf.Tape = conf.Tape
+        next_conf.Tape = prevTape
     } else if (index == leng) && (next_symbol != Blank) {
-        next_conf.Tape = append(conf.Tape, next_symbol)
+        next_conf.Tape = append(prevTape, next_symbol)
     } else if (index == 0) && (next_symbol == Blank) {
         // replace first symbol with a Blank and DO NOT move
-        next_conf.Tape = append(conf.Tape[:0], conf.Tape[1:] ...)
+        next_conf.Tape = append(prevTape[:0], prevTape[1:] ...)
         next_conf.Index = index
         return next_conf
     } else {
-        next_conf.Tape = conf.Tape
+        next_conf.Tape = prevTape
         next_conf.Tape[conf.Index] = next_symbol
     }
 
