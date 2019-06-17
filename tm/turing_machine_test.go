@@ -128,6 +128,16 @@ var stepTests = []stepTest{
 
     {tmCaseSens, "tmCaseSens", tm.Config{"start", []string{"a"}, 0}, tm.Config{"accept", []string{"b"}, 1}, true},
     {tmCaseSens, "tmCaseSens", tm.Config{"start", []string{"A"}, 0}, tm.Config{"reject", []string{"B"}, 1}, true},
+
+    {tmWild, "tmWild", tm.Config{"start", []string{"a"}, 0}, tm.Config{"q2", []string{"x"}, 1}, true},
+    {tmWild, "tmWild", tm.Config{"q2", []string{"x"}, 1}, tm.Config{"reject", []string{"x", "x"}, 2}, true},
+    {tmWild, "tmWild", tm.Config{"start", []string{"a b"}, 0}, tm.Config{"q2", []string{"x b"}, 1}, true},
+    {tmWild, "tmWild", tm.Config{"q2", []string{"x b"}, 0}, tm.Config{"accept", []string{"x x"}, 2}, true},
+    {tmWild, "tmWild", tm.Config{"start", []string{"b b"}, 0}, tm.Config{"reject", []string{"x b"}, 1}, true},
+
+    {tmWildFirst, "tmWildFirst", tm.Config{"start", []string{"a"}, 0}, tm.Config{"q2", []string{"x"}, 1}, true},
+    {tmWildFirst, "tmWildFirst", tm.Config{"start", []string{"b b"}, 0}, tm.Config{"q2", []string{"x b"}, 1}, true},
+    {tmWildFirst, "tmWildFirst", tm.Config{"q2", []string{"x b"}, 1}, tm.Config{"reject", []string{"x x"}, 2}, true},
 }
 
 func TestStep(t *testing.T) {
@@ -324,6 +334,28 @@ var tmBlankLeft, errBlankLeft = tm.NewTuringMachine(
         {tm.Input{"any", tm.Blank}, tm.Output{"any", tm.Blank, tm.Left}},
     },
     "any",
+    "accept",
+    "reject")
+
+var tmWild, errWild = tm.NewTuringMachine(
+    []tm.Transition{
+        {tm.Input{"start", "a"}, tm.Output{"q2", "x", tm.Right}},
+        {tm.Input{"start", "*"}, tm.Output{"reject", "x", tm.Right}},
+        {tm.Input{"*", "b"}, tm.Output{"accept", "x", tm.Right}},
+        {tm.Input{"*", "*"}, tm.Output{"reject", "x", tm.Right}},
+    },
+    "start",
+    "accept",
+    "reject")
+
+var tmWildFirst, errWildFirst = tm.NewTuringMachine(
+    []tm.Transition{
+        {tm.Input{"start", "*"}, tm.Output{"q2", "x", tm.Right}},
+        {tm.Input{"start", "a"}, tm.Output{"reject", "x", tm.Right}},
+        {tm.Input{"*", "*"}, tm.Output{"reject", "x", tm.Right}},
+        {tm.Input{"*", "b"}, tm.Output{"accept", "x", tm.Right}},
+    },
+    "start",
     "accept",
     "reject")
 
