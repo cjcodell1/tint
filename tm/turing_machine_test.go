@@ -147,6 +147,11 @@ var stepTests = []stepTest{
     {tmWildFirst, "tmWildFirst", tm.Config{"start", []string{"a"}, 0}, tm.Config{"q2", []string{"x"}, 1}, true},
     {tmWildFirst, "tmWildFirst", tm.Config{"start", []string{"b", "b"}, 0}, tm.Config{"q2", []string{"x", "b"}, 1}, true},
     {tmWildFirst, "tmWildFirst", tm.Config{"q2", []string{"x", "b"}, 1}, tm.Config{"reject", []string{"x", "x"}, 2}, true},
+
+    {tmWriteSame, "tmWriteSame", tm.Config{"same", []string{"a", "b", "c"}, 0}, tm.Config{"same", []string{"a", "b", "c"}, 1}, true},
+    {tmWriteSame, "tmWriteSame", tm.Config{"same", []string{"a", "b", "c"}, 1}, tm.Config{"same", []string{"a", "b", "c"}, 2}, true},
+    {tmWriteSame, "tmWriteSame", tm.Config{"same", []string{"a", "b", "c"}, 2}, tm.Config{"same", []string{"a", "b", "c"}, 3}, true},
+    {tmWriteSame, "tmWriteSame", tm.Config{"same", []string{"a", "b", "c"}, 3}, tm.Config{"accept", []string{"a", "b", "c"}, 3}, true},
 }
 
 func testStep(t *testing.T) {
@@ -365,6 +370,15 @@ var tmWildFirst, errWildFirst = tm.NewTuringMachine(
         {tm.Input{"*", "b"}, tm.Output{"accept", "x", tm.Right}},
     },
     "start",
+    "accept",
+    "reject")
+
+var tmWriteSame, errWriteSame = tm.NewTuringMachine(
+    []tm.Transition{
+        {tm.Input{"same", tm.Blank}, tm.Output{"accept", tm.Blank, tm.Right}},
+        {tm.Input{"same", "*"}, tm.Output{"same", "*", tm.Right}},
+    },
+    "same",
     "accept",
     "reject")
 
