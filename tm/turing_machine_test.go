@@ -8,6 +8,15 @@ import (
     "github.com/cjcodell1/tint/tm"
 )
 
+// Run all testing functions
+func TestAll(t *testing.T) {
+    testNewTuringMachine(t)
+    testStart(t)
+    testStep(t)
+    testIsAccept(t)
+    testIsReject(t)
+}
+
 // Testing NewTuringMachine
 
 type newTMTest struct {
@@ -26,7 +35,7 @@ var newTMTests = []newTMTest{
     {[]tm.Transition{}, "same", "same", "same", false},
 }
 
-func TestNewTuringMachine(t *testing.T) {
+func testNewTuringMachine(t *testing.T) {
     for _, tc := range newTMTests {
         got, gotErr := tm.NewTuringMachine(tc.trans, tc.start, tc.accept, tc.reject)
 
@@ -68,7 +77,7 @@ var startTests = []startTest {
     {tmCaseSens, "tmCaseSens", "a A a A", tm.Config{"start", []string{"a", "A", "a", "A"}, 0}},
 }
 
-func TestStart(t *testing.T) {
+func testStart(t *testing.T) {
     for _, tc := range startTests {
         got := tc.tm.Start(tc.input)
         if toString(tc.expect) != toString(got) {
@@ -128,9 +137,24 @@ var stepTests = []stepTest{
 
     {tmCaseSens, "tmCaseSens", tm.Config{"start", []string{"a"}, 0}, tm.Config{"accept", []string{"b"}, 1}, true},
     {tmCaseSens, "tmCaseSens", tm.Config{"start", []string{"A"}, 0}, tm.Config{"reject", []string{"B"}, 1}, true},
+
+    {tmWild, "tmWild", tm.Config{"start", []string{"a"}, 0}, tm.Config{"q2", []string{"x"}, 1}, true},
+    {tmWild, "tmWild", tm.Config{"q2", []string{"x"}, 1}, tm.Config{"reject", []string{"x", "x"}, 2}, true},
+    {tmWild, "tmWild", tm.Config{"start", []string{"a", "b"}, 0}, tm.Config{"q2", []string{"x", "b"}, 1}, true},
+    {tmWild, "tmWild", tm.Config{"q2", []string{"x", "b"}, 1}, tm.Config{"accept", []string{"x", "x"}, 2}, true},
+    {tmWild, "tmWild", tm.Config{"start", []string{"b", "b"}, 0}, tm.Config{"reject", []string{"x", "b"}, 1}, true},
+
+    {tmWildFirst, "tmWildFirst", tm.Config{"start", []string{"a"}, 0}, tm.Config{"q2", []string{"x"}, 1}, true},
+    {tmWildFirst, "tmWildFirst", tm.Config{"start", []string{"b", "b"}, 0}, tm.Config{"q2", []string{"x", "b"}, 1}, true},
+    {tmWildFirst, "tmWildFirst", tm.Config{"q2", []string{"x", "b"}, 1}, tm.Config{"reject", []string{"x", "x"}, 2}, true},
+
+    {tmWriteSame, "tmWriteSame", tm.Config{"same", []string{"a", "b", "c"}, 0}, tm.Config{"same", []string{"a", "b", "c"}, 1}, true},
+    {tmWriteSame, "tmWriteSame", tm.Config{"same", []string{"a", "b", "c"}, 1}, tm.Config{"same", []string{"a", "b", "c"}, 2}, true},
+    {tmWriteSame, "tmWriteSame", tm.Config{"same", []string{"a", "b", "c"}, 2}, tm.Config{"same", []string{"a", "b", "c"}, 3}, true},
+    {tmWriteSame, "tmWriteSame", tm.Config{"same", []string{"a", "b", "c"}, 3}, tm.Config{"accept", []string{"a", "b", "c"}, 3}, true},
 }
 
-func TestStep(t *testing.T) {
+func testStep(t *testing.T) {
     for _, tc := range stepTests {
         got, gotErr := tc.tm.Step(tc.input)
 
@@ -170,7 +194,7 @@ var isAcceptTests = []isAcceptRejectTest{
     {tmAddMarkers, "tmAddMarkers", tm.Config{"accept", []string{}, 0}, false},
 }
 
-func TestIsAccept(t *testing.T) {
+func testIsAccept(t *testing.T) {
     for _, tc := range isAcceptTests {
         got := tc.tm.IsAccept(tc.conf)
         if got != tc.expect {
@@ -190,7 +214,7 @@ var isRejectTests = []isAcceptRejectTest{
     {tmAddMarkers, "tmAddMarkers", tm.Config{"accept", []string{}, 0}, false},
 }
 
-func TestIsReject(t *testing.T) {
+func testIsReject(t *testing.T) {
     for _, tc := range isRejectTests {
         got := tc.tm.IsReject(tc.conf)
         if got != tc.expect {
@@ -324,6 +348,37 @@ var tmBlankLeft, errBlankLeft = tm.NewTuringMachine(
         {tm.Input{"any", tm.Blank}, tm.Output{"any", tm.Blank, tm.Left}},
     },
     "any",
+    "accept",
+    "reject")
+
+var tmWild, errWild = tm.NewTuringMachine(
+    []tm.Transition{
+        {tm.Input{"start", "a"}, tm.Output{"q2", "x", tm.Right}},
+        {tm.Input{"start", "*"}, tm.Output{"reject", "x", tm.Right}},
+        {tm.Input{"*", "b"}, tm.Output{"accept", "x", tm.Right}},
+        {tm.Input{"*", "*"}, tm.Output{"reject", "x", tm.Right}},
+    },
+    "start",
+    "accept",
+    "reject")
+
+var tmWildFirst, errWildFirst = tm.NewTuringMachine(
+    []tm.Transition{
+        {tm.Input{"start", "*"}, tm.Output{"q2", "x", tm.Right}},
+        {tm.Input{"start", "a"}, tm.Output{"reject", "x", tm.Right}},
+        {tm.Input{"*", "*"}, tm.Output{"reject", "x", tm.Right}},
+        {tm.Input{"*", "b"}, tm.Output{"accept", "x", tm.Right}},
+    },
+    "start",
+    "accept",
+    "reject")
+
+var tmWriteSame, errWriteSame = tm.NewTuringMachine(
+    []tm.Transition{
+        {tm.Input{"same", tm.Blank}, tm.Output{"accept", tm.Blank, tm.Right}},
+        {tm.Input{"same", "*"}, tm.Output{"same", "*", tm.Right}},
+    },
+    "same",
     "accept",
     "reject")
 

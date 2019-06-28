@@ -7,6 +7,7 @@ import (
 
 const (
     Blank string = "_"
+    Wildcard string = "*"
 )
 
 
@@ -69,8 +70,14 @@ func (tm turingMachine) IsReject(conf Config) bool {
 
 func (tm turingMachine) findTransition(state string, symbol string) (string, string, string, error) {
     for _, trans := range tm.Trans {
-        if (trans.In == Input{state, symbol}) {
-            return trans.Out.State, trans.Out.Symbol, trans.Out.Move, nil
+        if (trans.In.State == state) || (trans.In.State == Wildcard) {
+            if (trans.In.Symbol == symbol) || (trans.In.Symbol == Wildcard) {
+                if trans.Out.Symbol == Wildcard {
+                    return trans.Out.State, symbol, trans.Out.Move, nil // if the output symbol is a wildcard, then re-write the symbol that is on the tape
+                } else {
+                    return trans.Out.State, trans.Out.Symbol, trans.Out.Move, nil
+                }
+            }
         }
     }
     // no transition found
