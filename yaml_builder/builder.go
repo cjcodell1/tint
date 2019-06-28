@@ -4,7 +4,7 @@ import (
 
     "gopkg.in/yaml.v2"
     "github.com/cjcodell1/tint/tm"
-    "github.com/cjcodell1/tint/file_reader"
+    "github.com/cjcodell1/tint/file"
 )
 
 type tmBuilder struct {
@@ -17,7 +17,7 @@ type tmBuilder struct {
 
 func Build(configPath string) (tm.TuringMachine, error) {
 
-    config, errRead := file_reader.ReadAll(configPath)
+    config, errRead := file.ReadAll(configPath)
     if errRead != nil {
         return nil, errRead
     }

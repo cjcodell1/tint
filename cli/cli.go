@@ -7,7 +7,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/cjcodell1/tint/file_reader"
+	"github.com/cjcodell1/tint/file"
 	"github.com/cjcodell1/tint/tm"
 	"github.com/cjcodell1/tint/worker"
 	"github.com/cjcodell1/tint/yaml_builder"
@@ -65,7 +65,7 @@ func Run() {
 		tests = append(tests, test)
 	} else {
 		testsPath := flag.Arg(1)
-		tests, err = file_reader.Lines(testsPath)
+		tests, err = file.ReadLines(testsPath)
 		if err != nil {
 			flag.PrintDefaults()
 			log.Fatalln(err.Error())

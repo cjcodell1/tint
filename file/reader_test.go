@@ -1,10 +1,10 @@
-package file_reader_test
+package file_test
 
 import (
     "testing"
     "strings"
 
-    "github.com/cjcodell1/tint/file_reader"
+    "github.com/cjcodell1/tint/file"
 )
 
 type readAllTest struct {
@@ -28,7 +28,7 @@ var readAllTests = []readAllTest {
 
 func TestReadAll(t *testing.T) {
     for _, tc := range readAllTests {
-        got, gotErr := file_reader.ReadAll(tc.path)
+        got, gotErr := file.ReadAll(tc.path)
         if (got != tc.expect) || (tc.isErrNil && (gotErr != nil)) {
             var expectErr string
             if tc.isErrNil {
@@ -46,13 +46,13 @@ func TestReadAll(t *testing.T) {
     }
 }
 
-type linesTest struct {
+type readLinesTest struct {
     path string
     expect []string
     isErrNil bool
 }
 
-var linesTests = []linesTest {
+var readLinesTests = []readLinesTest {
     {"examples/file1", []string{""}, true}, // contains the empty string
     {"examples/file2", []string{"abc"}, true},
     {"examples/file3", []string{"a", "b", "c"}, true},
@@ -65,9 +65,9 @@ var linesTests = []linesTest {
     {"examples/file9", []string{""}, true}, // also dos endings
 }
 
-func TestLines(t *testing.T) {
-    for _, tc := range linesTests {
-        got, gotErr := file_reader.Lines(tc.path)
+func TestReadLines(t *testing.T) {
+    for _, tc := range readLinesTests {
+        got, gotErr := file.ReadLines(tc.path)
         if (strings.Join(got, "\n") != strings.Join(tc.expect, "\n")) || (tc.isErrNil && (gotErr != nil)) {
             var expectErr string
             if tc.isErrNil {

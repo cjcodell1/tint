@@ -1,4 +1,5 @@
-package file_reader
+// Package file contains common functions needed to work with files.
+package file
 
 import (
     "os"
@@ -8,6 +9,7 @@ import (
     "strings"
 )
 
+// ReadAll reads an entire file from a path and returns the contents as a string.
 func ReadAll(path string) (string, error) {
     f, err := os.Open(path)
     defer f.Close()
@@ -23,7 +25,9 @@ func ReadAll(path string) (string, error) {
     return string(contents), nil
 }
 
-func Lines(path string) ([]string, error) {
+// ReadLines reads an entire file from a path and returns
+// the contents as a slice of lines, with each line being a string.
+func ReadLines(path string) ([]string, error) {
 
     f, err := os.Open(path)
     defer f.Close()
@@ -33,6 +37,8 @@ func Lines(path string) ([]string, error) {
 
     lines := make([]string, 0, 1)
     bufReaderPtr := bufio.NewReader(f)
+
+	// Reads until EOF or error
     for {
         line, err := bufReaderPtr.ReadString(byte('\n'))
         if err == io.EOF {
