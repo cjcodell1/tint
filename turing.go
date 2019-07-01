@@ -1,11 +1,9 @@
 package main
 
 import (
-
-
-    "github.com/cjcodell1/tint/cli"
+	"github.com/cjcodell1/tint/cli"
 )
 
 func main() {
-    cli.Run()
+	cli.Run()
 }
