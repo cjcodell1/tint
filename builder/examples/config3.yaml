@@ -1,0 +1,26 @@
+# recognizes the language aa*bb*aa*
+# over the alphabet {a, b}
+
+start: seen0
+accept: good
+reject: bad
+transitions:
+    # find the first run of 'a'
+    - [seen0, a, seenA, c, R]
+    - [seen0, b, bad, c, R]
+    - [seen0, _, bad, c, R]
+
+    # find the first run of 'b'
+    - [seenA, a, seenA, c, R]
+    - [seenA, b, seenAB, c, R]
+    - [seenA, _, bad, c, R]
+
+    # find the next run of 'a'
+    - [seenAB, a, seenABA, c, R]
+    - [seenAB, b, seenAB, c, R]
+    - [seenAB, _, bad, c, R]
+
+    # expect only 'a', accept on '_'
+    - [seenABA, a, seenABA, c, R]
+    - [seenABA, b, bad, c, R]
+    - [seenABA, _, good, c, R]
