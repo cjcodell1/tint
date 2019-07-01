@@ -1,3 +1,6 @@
+// TODO this file will need refactoring when I implement FSMs.
+
+// Pacakge worker is a worker pool to complete tests for Turing machines.
 package worker
 
 import (
@@ -7,12 +10,14 @@ import (
     "github.com/cjcodell1/tint/machine/turing"
 )
 
+// Job represents a test to run on the provided Turing machine.
 type Job struct {
     Id int
     Input string
     TM turing.TuringMachine
 }
 
+// Result represents a simulated test.
 type Result struct {
     Id int
     Input string
@@ -46,6 +51,7 @@ func worker(jobs <-chan Job, results chan<- Result, wg *sync.WaitGroup) {
     wg.Done()
 }
 
+// TestAll will simulate the provided tests on the Turing machine using a worker pool.
 func TestAll(inputs []string, tm turing.TuringMachine) []Result {
     var wg sync.WaitGroup
     jobs := make(chan Job, 100)
