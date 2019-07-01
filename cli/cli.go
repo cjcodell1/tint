@@ -10,7 +10,7 @@ import (
 	"github.com/cjcodell1/tint/file"
 	"github.com/cjcodell1/tint/machine/turing"
 	"github.com/cjcodell1/tint/worker"
-	"github.com/cjcodell1/tint/yaml_builder"
+	"github.com/cjcodell1/tint/builder/yaml"
 )
 
 var (
@@ -53,7 +53,7 @@ func Run() {
 
 	// Builds the Turing machine from the first non-flag argument.
 	tmPath := flag.Arg(0)
-	machine, err := yaml_builder.Build(tmPath)
+	machine, err := yaml.Build(tmPath)
 	if err != nil {
 		flag.PrintDefaults()
 		log.Fatalln(err.Error())

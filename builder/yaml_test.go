@@ -20,7 +20,7 @@ var buildTests = []buildTest{
 
 func TestBuild(t *testing.T) {
     for _, tc := range buildTests {
-        _, gotErr := yaml_builder.Build(tc.path)
+        _, gotErr := yaml.Build(tc.path)
         if (tc.isErrNil && (gotErr != nil)) {
             var expectErr string
             if tc.isErrNil {
