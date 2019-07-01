@@ -8,6 +8,16 @@ It is a great environment to design and easily test Turing machines.
 My goal for tint is that it gives people learning about Turing machines some hands-on experience.
 When I learned about finite state automata as an undergraduate, my favorite part was building the machines and understanding how each one works.
 
+## Install
+
+First [download](https://golang.org/dl/) and then [configure](https://golang.org/doc/install) Go.
+
+Then download and install tint:
+
+`go get github.com/cjcodell1/tint`
+
+If you've set up Go correctly, you should be able to enter `tint` and see the help message.
+
 ## Features
 
 - [X] Simulate Turing machines with test(s).
