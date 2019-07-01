@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/cjcodell1/tint/file"
-	"github.com/cjcodell1/tint/tm"
+	"github.com/cjcodell1/tint/machine/turing"
 	"github.com/cjcodell1/tint/worker"
 	"github.com/cjcodell1/tint/yaml_builder"
 )
@@ -48,7 +48,7 @@ func Run() {
 		log.Fatalln("Please input a Turing machine and test(s).")
 	}
 
-	var machine tm.TuringMachine
+	var machine turing.TuringMachine
 	var tests []string
 
 	// Builds the Turing machine from the first non-flag argument.
@@ -89,6 +89,6 @@ func Run() {
 	}
 }
 
-func simplePrintConf(conf tm.Config) string {
+func simplePrintConf(conf turing.Config) string {
 	return fmt.Sprintf("%s: %q, at %d", conf.State, strings.Join(conf.Tape, " "), conf.Index)
 }

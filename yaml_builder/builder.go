@@ -3,7 +3,7 @@ package yaml_builder
 import (
 
     "gopkg.in/yaml.v2"
-    "github.com/cjcodell1/tint/tm"
+    "github.com/cjcodell1/tint/machine/turing"
     "github.com/cjcodell1/tint/file"
 )
 
@@ -15,7 +15,7 @@ type tmBuilder struct {
     Transitions [][5]string
 }
 
-func Build(configPath string) (tm.TuringMachine, error) {
+func Build(configPath string) (turing.TuringMachine, error) {
 
     config, errRead := file.ReadAll(configPath)
     if errRead != nil {
@@ -29,12 +29,12 @@ func Build(configPath string) (tm.TuringMachine, error) {
         return nil, errUnMarsh
     }
 
-    var trans []tm.Transition
+    var trans []turing.Transition
     for _, t := range builder.Transitions {
-        trans = append(trans, tm.Transition{tm.Input{t[0], t[1]}, tm.Output{t[2], t[3], t[4]}})
+        trans = append(trans, turing.Transition{turing.Input{t[0], t[1]}, turing.Output{t[2], t[3], t[4]}})
     }
 
-    tm, errBuild := tm.NewTuringMachine(trans, builder.Start, builder.Accept, builder.Reject)
+    tm, errBuild := turing.NewTuringMachine(trans, builder.Start, builder.Accept, builder.Reject)
     if errBuild != nil {
         return nil, errBuild
     }

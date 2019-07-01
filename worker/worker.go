@@ -4,28 +4,28 @@ import (
     "sync"
     "log"
 
-    "github.com/cjcodell1/tint/tm"
+    "github.com/cjcodell1/tint/machine/turing"
 )
 
 type Job struct {
     Id int
     Input string
-    TM tm.TuringMachine
+    TM turing.TuringMachine
 }
 
 type Result struct {
     Id int
     Input string
-    TM tm.TuringMachine
-    Configs []tm.Config // in chronological order
+    TM turing.TuringMachine
+    Configs []turing.Config // in chronological order
 }
 
 
 func worker(jobs <-chan Job, results chan<- Result, wg *sync.WaitGroup) {
     for j := range jobs {
-        var conf tm.Config
+        var conf turing.Config
         var err error
-        var confs = make([]tm.Config, 0)
+        var confs = make([]turing.Config, 0)
         var result Result
 
         for conf = j.TM.Start(j.Input); !(j.TM.IsAccept(conf) || j.TM.IsReject(conf)); conf, err = j.TM.Step(conf) {
@@ -46,7 +46,7 @@ func worker(jobs <-chan Job, results chan<- Result, wg *sync.WaitGroup) {
     wg.Done()
 }
 
-func TestAll(inputs []string, tm tm.TuringMachine) []Result {
+func TestAll(inputs []string, tm turing.TuringMachine) []Result {
     var wg sync.WaitGroup
     jobs := make(chan Job, 100)
     results := make(chan Result, 100)

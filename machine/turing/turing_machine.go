@@ -1,4 +1,5 @@
-package tm
+// Package turing is the implementation of a Turing machine.
+package turing
 
 import (
     "fmt"
@@ -11,6 +12,7 @@ const (
 )
 
 
+// TuringMachine is the interface specifying which functions are available for Turing Machines.
 type TuringMachine interface {
     Start(input string) Config
     Step(conf Config) (Config, error)
@@ -18,6 +20,8 @@ type TuringMachine interface {
     IsReject(conf Config) bool
 }
 
+// turingMachine is an UNEXPORTED struct with EXPORTED fields,
+// forcing programmers to use the constructor which provides error checking.
 type turingMachine struct {
     Trans []Transition
     StartState string
@@ -25,6 +29,9 @@ type turingMachine struct {
     RejectState string
 }
 
+// NewTuringMachine is the constructor for a TuringMachine.
+// It provides error checking necessary for a Turing machine.
+// Errors when the accept and reject states are the same state.
 func NewTuringMachine(trans []Transition, start string, accept string, reject string) (TuringMachine, error) {
     if accept == reject {
         return turingMachine{}, fmt.Errorf("%s cannot be both the accept state and the reject state.", accept)
@@ -32,10 +39,14 @@ func NewTuringMachine(trans []Transition, start string, accept string, reject st
     return turingMachine{trans, start, accept, reject}, nil
 }
 
+// Start builds the first Config given an input string.
 func (tm turingMachine) Start(input string) Config {
     return Config{tm.StartState, strings.Fields(input), 0}
 }
 
+// Step applies one transition to the given Config.
+// Applies no transition if the Config is in an accept or reject state.
+// Errors when there is no transition for the Config.
 func (tm turingMachine) Step(conf Config) (Config, error) {
     state := conf.State
 
@@ -52,17 +63,18 @@ func (tm turingMachine) Step(conf Config) (Config, error) {
     }
 
     next_state, next_symbol, next_move, err := tm.findTransition(state, symbol)
-
     if err != nil {
         return Config{}, err
     }
     return next(conf, next_state, next_symbol, next_move), nil
 }
 
+// IsAccept returns true if the Config is in an accept state.
 func (tm turingMachine) IsAccept(conf Config) bool {
     return tm.AcceptState == conf.State
 }
 
+// IsReject returns true if the Config is in a reject state.
 func (tm turingMachine) IsReject(conf Config) bool {
     return tm.RejectState == conf.State
 }
