@@ -56,6 +56,7 @@ transitions:
 YAML is pretty similar to JSON; it supports maps of key-value pairs, lists, strings, and comments ([among others](https://yaml.org/)).
 One **important note** about YAML is that indentations must be made with **spaces**, **not tabs**.
 Using tabs to indent lines will cause an error.
+
 Every Turing machine has four keys: `start`, `accept`, `reject`, and `transitions`.
 The order of these keys does not matter, but for readability it is best to keep the transitions at the botton.
 
@@ -71,16 +72,17 @@ Basically a transition is `[current_state, read_symbol, next_state, write_symbol
 In YAML, strings do not always have to be placed in double or single quotes.
 However, if your states or symbols are special, non-alphanumeric characters then you may need to use quotes to denote a string (e.g. "\*", "$", " ").
 
-For the reasons below, you **cannot** use an asterisk "\*" as a state, symbol in the input alphabet, or symbol in the tape alphabet.
-You **cannot** use an underscore "\_" as a state or symbol in the input alphabet.
-You **cannot** use a space " " as a symbol in the input alphabet and **should not** use it as a state or symbol in the tape alphabet.
+For the reasons below:
+- You **cannot** use an asterisk "\*" as a state, symbol in the input alphabet, or symbol in the tape alphabet.
+- You **cannot** use an underscore "\_" as a state or symbol in the input alphabet.
+- You **cannot** use a space " " as a symbol in the input alphabet and **should not** use it as a state or symbol in the tape alphabet.
 
-"\*" is a special character which denotes "any other".
-For example "\*" is used as the `read_symbol` on line 11 of the above example.
-This tells the Turing machine if it is in state `seen0` reads any symbol other than `a` (symbols listed above the "\*" line), then perform that transition on line 11.
-"\*" can also be used as the `write_symbol`, telling the Turing machine to write the same symbol it had just read.
-Finally, "\*" can be used as `current_state` and `next_state` giving similar effects.
-One **important note** on the use of "\*" is this interpreter will use the first matching transition for a state, symbol pair.
+\* is a special character which denotes "any other".
+For example \* is used as the `read_symbol` on line 11 of the above example.
+This tells the Turing machine if it is in state `seen0` and reads any symbol other than `a` (symbols listed above the \* line), then perform that transition on line 11.
+\* can also be used as the `write_symbol`, telling the Turing machine to write the same symbol it had just read.
+Finally, \* can be used as `current_state` and `next_state` giving similar effects.
+One **important note** on the use of \* is that this interpreter will use the first matching transition for a state-symbol pair.
 So, swapping lines 10 and 11 of the above file will cause the Turing machine to recognize the empty language.
 
 "\_" is also a special character which denotes the blank symbol.
