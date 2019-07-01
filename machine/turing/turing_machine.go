@@ -65,7 +65,13 @@ func (tm turingMachine) Step(conf Config) (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
-	return next(conf, next_state, next_symbol, next_move), nil
+
+	next_conf, err := next(conf, next_state, next_symbol, next_move)
+	if err != nil {
+		return Config{}, err
+	}
+
+	return next_conf, nil
 }
 
 // IsAccept returns true if the Config is in an accept state.
@@ -82,11 +88,19 @@ func (tm turingMachine) findTransition(state string, symbol string) (string, str
 	for _, trans := range tm.Trans {
 		if (trans.In.State == state) || (trans.In.State == Wildcard) {
 			if (trans.In.Symbol == symbol) || (trans.In.Symbol == Wildcard) {
+				var next_symbol string
+				var next_state string
 				if trans.Out.Symbol == Wildcard {
-					return trans.Out.State, symbol, trans.Out.Move, nil // if the output symbol is a wildcard, then re-write the symbol that is on the tape
+					next_symbol = symbol // if the output symbol is a wildcard, then re-write the symbol that is on the tape
 				} else {
-					return trans.Out.State, trans.Out.Symbol, trans.Out.Move, nil
+					next_symbol = trans.Out.Symbol
 				}
+				if trans.Out.State == Wildcard {
+					next_state = state
+				} else {
+					next_state = trans.Out.State
+				}
+				return next_state, next_symbol, trans.Out.Move, nil
 			}
 		}
 	}
@@ -95,7 +109,7 @@ func (tm turingMachine) findTransition(state string, symbol string) (string, str
 	return "", "", "", err
 }
 
-func next(conf Config, next_state string, next_symbol string, next_move string) Config {
+func next(conf Config, next_state string, next_symbol string, next_move string) (Config, error) {
 	// don't want to mutate conf.Tape
 	var prevTape = make([]string, len(conf.Tape))
 	copy(prevTape, conf.Tape)
@@ -116,7 +130,7 @@ func next(conf Config, next_state string, next_symbol string, next_move string) 
 		// replace first symbol with a Blank and DO NOT move
 		next_conf.Tape = append(prevTape[:0], prevTape[1:]...)
 		next_conf.Index = index
-		return next_conf
+		return next_conf, nil
 	} else {
 		next_conf.Tape = prevTape
 		next_conf.Tape[conf.Index] = next_symbol
@@ -134,10 +148,12 @@ func next(conf Config, next_state string, next_symbol string, next_move string) 
 	} else {
 		if next_move == Right {
 			next_conf.Index = index + 1
-		} else {
+		} else if next_move == Left {
 			next_conf.Index = index - 1
+		} else {
+			return Config{}, fmt.Errorf("%s is not a legal move, use %s or %s", next_move, Right, Left)
 		}
 	}
 
-	return next_conf
+	return next_conf, nil
 }
