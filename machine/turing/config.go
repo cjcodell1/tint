@@ -3,9 +3,7 @@ package turing
 
 // Config is a Turing machine configuration.
 type Config struct {
-    State string
-    Tape []string
-    Index int
+	State string
+	Tape  []string
+	Index int
 }
-
-

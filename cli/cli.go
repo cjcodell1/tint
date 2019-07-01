@@ -7,10 +7,10 @@ import (
 	"log"
 	"strings"
 
+	"github.com/cjcodell1/tint/builder/yaml"
 	"github.com/cjcodell1/tint/file"
 	"github.com/cjcodell1/tint/machine/turing"
 	"github.com/cjcodell1/tint/worker"
-	"github.com/cjcodell1/tint/builder/yaml"
 )
 
 var (
