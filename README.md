@@ -66,7 +66,7 @@ These states can be named anything as long as the accept state and reject state 
 
 `transitions` specify a list of transitions for the Turing machine.
 Each transition is of the form
-![Transition Function](https://latex.codecogs.com/gif.latex?\delta:&space;Q&space;\times&space;\Gamma&space;\to&space;Q&space;\times&space;\Gamma&space;\times&space;\{\text{L},&space;\text{R}\}), where ![Q](https://latex.codecogs.com/gif.latex?Q) is the set of states and ![Gamma](https://latex.codecogs.com/gif.latex?\Gamma) is the tape alphabet.
+![Transition Function](https://latex.codecogs.com/gif.latex?\delta:&space;Q&space;\times&space;\Gamma&space;\to&space;Q&space;\times&space;\Gamma&space;\times&space;\{\text{L},&space;\text{R}\}), where ![Q](https://latex.codecogs.com/gif.latex?Q) is the set of states, ![Gamma](https://latex.codecogs.com/gif.latex?\Gamma) is the tape alphabet, ![L](https://latex.codecogs.com/gif.latex?L) and ![R](https://latex.codecogs.com/gif.latex?R) are the right or left direction for moving the head.
 
 Basically a transition is `[current_state, read_symbol, next_state, write_symbol, move_head]`.
 In YAML, strings do not always have to be placed in double or single quotes.
