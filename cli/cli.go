@@ -10,7 +10,6 @@ import (
 	"github.com/cjcodell1/tint/builder/yaml"
 	"github.com/cjcodell1/tint/file"
 	"github.com/cjcodell1/tint/machine/turing"
-	"github.com/cjcodell1/tint/worker"
 )
 
 var (
@@ -72,16 +71,16 @@ func Run() {
 		}
 	}
 
-	// Simulates the tests and prints the results.
-	results := worker.TestAll(tests, machine)
-	for _, result := range results {
-		fmt.Printf("Simulating with %q.\n", result.Input)
-		if verboseFlag {
-			for _, conf := range result.Configs {
+	// Simulate the test
+	for _, input := range tests {
+		fmt.Printf("Simulating with %q.\n", input)
+		var conf turing.Config
+		for conf = machine.Start(input); !(machine.IsAccept(conf) || machine.IsReject(conf)); conf, err = machine.Step(conf) {
+			if verboseFlag {
 				fmt.Println(simplePrintConf(conf))
 			}
 		}
-		if result.TM.IsAccept(result.Configs[len(result.Configs)-1]) {
+		if machine.IsAccept(conf) {
 			fmt.Println("Accepted.\n")
 		} else {
 			fmt.Println("Rejected.\n")
