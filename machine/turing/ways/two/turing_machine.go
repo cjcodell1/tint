@@ -1,52 +1,43 @@
-// Package turing is the implementation of a Turing machine.
-package turing
+package two
 
 import (
 	"fmt"
 	"strings"
+
+	"github.com/cjcodell1/tint/machine"
+	"github.com/cjcodell1/tint/machine/turing"
+	"github.com/cjcodell1/tint/machine/turing/ways"
+	"github.com/cjcodell1/tint/machine/turing/ways/two"
 )
 
-const (
-	Blank    string = "_"
-	Wildcard string = "*"
-)
 
-// TuringMachine is the interface specifying which functions are available for Turing Machines.
-type TuringMachine interface {
-	Start(input string) Config
-	Step(conf Config) (Config, error)
-	IsAccept(conf Config) bool
-	IsReject(conf Config) bool
-}
-
-// turingMachine is an UNEXPORTED struct with EXPORTED fields,
-// forcing programmers to use the constructor which provides error checking.
 type turingMachine struct {
-	Trans       []Transition
-	StartState  string
-	AcceptState string
-	RejectState string
+	trans       []ways.Transition
+	startState  string
+	acceptState string
+	rejectState string
 }
 
-// NewTuringMachine is the constructor for a TuringMachine.
+// NewTuringMachine is the constructor for a turingMachine.
 // It provides error checking necessary for a Turing machine.
 // Errors when the accept and reject states are the same state.
-func NewTuringMachine(trans []Transition, start string, accept string, reject string) (TuringMachine, error) {
+func NewTuringMachine(trans []ways.Transition, start string, accept string, reject string) (machine.Machine, error) {
 	if accept == reject {
 		return turingMachine{}, fmt.Errorf("%s cannot be both the accept state and the reject state.", accept)
 	}
 	return turingMachine{trans, start, accept, reject}, nil
 }
 
-// Start builds the first Config given an input string.
-func (tm turingMachine) Start(input string) Config {
-	return Config{tm.StartState, strings.Fields(input), 0}
+// Start builds the first Config given a space-delimited input string.
+func (tm turingMachine) Start(input string) machine.Config {
+	return twoWayConfig{tm.startState, strings.Fields(input), 0}
 }
 
 // Step applies one transition to the given Config.
 // Applies no transition if the Config is in an accept or reject state.
 // Errors when there is no transition for the Config.
-func (tm turingMachine) Step(conf Config) (Config, error) {
+func (tm turingMachine) Step(conf machine.Config) (machine.Config, error) {
+	// TODO pick up here
 	state := conf.State
 
 	// if the state is accept or reject, then don't do anything
