@@ -1,5 +1,8 @@
 package machine
 
+const (
+	Wildcard string = "*"
+)
 
 // interface for all Machines (e.g. DFA, NFA, PDA, various TMs, etc.)
 type Machine interface {
