@@ -20,7 +20,7 @@ type turingMachine struct {
 // NewTuringMachine is the constructor for a turingMachine.
 // It provides error checking necessary for a Turing machine.
 // Errors when the accept and reject states are the same state.
-func NewTuringMachine(trans []ways.Transition, start string, accept string, reject string) (machine.Machine, error) {
+func MakeTuringMachine(trans []ways.Transition, start string, accept string, reject string) (machine.Machine, error) {
 	if accept == reject {
 		return turingMachine{}, fmt.Errorf("%s cannot be both the accept state and the reject state.", accept)
 	}
