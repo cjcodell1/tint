@@ -3,6 +3,7 @@ package two
 import (
 	"fmt"
 	"strings"
+	"errors"
 
 	"github.com/cjcodell1/tint/machine"
 	"github.com/cjcodell1/tint/machine/turing"
@@ -36,26 +37,42 @@ func (tm turingMachine) Start(input string) machine.Config {
 // Applies no transition if the Config is in an accept or reject state.
 // Errors when there is no transition for the Config.
 func (tm turingMachine) Step(conf machine.Config) (machine.Config, error) {
-	state := conf.state
+	twoWay, ok := conf.(twoWayConfig)
+	if !ok {
+		errors.New("Cannot convert config to correct type for two-way Turing machines.")
+	}
+	state := twoWay.state
 
 	// if the state is accept or reject, then don't do anything
-	if (tm.IsAccept(conf)) || (tm.IsReject(conf)) {
+	accept, err := tm.IsAccept(conf)
+	if err != nil {
+		return nil, err
+	}
+	reject, err := tm.IsReject(conf)
+	if err != nil {
+		return nil, err
+	}
+
+	if (accept || reject) {
 		return conf, nil
 	}
 
 	var symbol string
-	if conf.index == len(conf.tape) {
+	if twoWay.head == len(twoWay.tape) {
 		symbol = turing.Blank
 	} else {
-		symbol = conf.tape[conf.index]
+		symbol = twoWay.tape[twoWay.head]
 	}
 
 	next_state, next_symbol, next_move, err := tm.findTransition(state, symbol)
 	if err != nil {
+		fmt.Printf("STEP: %v\n", conf)
+		fmt.Printf("state: %s\nsymbol: %s\n", state, symbol)
+		fmt.Println("ERROR2")
 		return twoWayConfig{}, err
 	}
 
-	next_conf, err := next(conf, next_state, next_symbol, next_move)
+	next_conf, err := next(twoWay, next_state, next_symbol, next_move)
 	if err != nil {
 		return twoWayConfig{}, err
 	}
@@ -64,19 +81,27 @@ func (tm turingMachine) Step(conf machine.Config) (machine.Config, error) {
 }
 
 // IsAccept returns true if the Config is in an accept state.
-func (tm turingMachine) IsAccept(conf machine.Config) bool {
-	return tm.acceptState == conf.state
+func (tm turingMachine) IsAccept(conf machine.Config) (bool, error) {
+	twoWay, ok := conf.(twoWayConfig)
+	if !ok {
+		return false, errors.New("Cannot convert config to correct type for two-way Turing machines.")
+	}
+	return tm.acceptState == twoWay.state, nil
 }
 
 // IsReject returns true if the Config is in a reject state.
-func (tm turingMachine) IsReject(conf machine.Config) bool {
-	return tm.rejectState == conf.state
+func (tm turingMachine) IsReject(conf machine.Config) (bool, error) {
+	twoWay, ok := conf.(twoWayConfig)
+	if !ok {
+		return false, errors.New("Cannot convert config to correct type for two-way Turing machines.")
+	}
+	return tm.rejectState == twoWay.state, nil
 }
 
 func (tm turingMachine) findTransition(state string, symbol string) (string, string, string, error) {
 	for _, trans := range tm.trans {
-		inState, inSymbol = trans.GetInput()
-		outState, outSymbol, outMove = trans.GetOutput()
+		inState, inSymbol := trans.GetInput()
+		outState, outSymbol, outMove := trans.GetOutput()
 		if (inState == state) || (inState == machine.Wildcard) {
 			if (inSymbol == symbol) || (inSymbol == machine.Wildcard) {
 				var next_symbol string
@@ -100,7 +125,8 @@ func (tm turingMachine) findTransition(state string, symbol string) (string, str
 	return "", "", "", err
 }
 
-func next(conf twoWayConfig, next_state string, next_symbol string, next_move string) (Config, error) {
+func next(conf twoWayConfig, next_state string, next_symbol string, next_move string) (machine.Config, error) {
+
 	// don't want to mutate conf.Tape
 	var prevTape = make([]string, len(conf.tape))
 	copy(prevTape, conf.tape)
@@ -110,21 +136,21 @@ func next(conf twoWayConfig, next_state string, next_symbol string, next_move st
 	next_conf.state = next_state
 
 	leng := len(prevTape)
-	index := conf.index
+	head := conf.head
 
 	// write the next symbol
-	if (index == leng) && (next_symbol == turing.Blank) {
-		next_conf.Tape = prevTape
-	} else if (index == leng) && (next_symbol != turing.Blank) {
-		next_conf.Tape = append(prevTape, next_symbol)
-	} else if (index == 0) && (next_symbol == turing.Blank) {
+	if (head == leng) && (next_symbol == turing.Blank) {
+		next_conf.tape = prevTape
+	} else if (head == leng) && (next_symbol != turing.Blank) {
+		next_conf.tape = append(prevTape, next_symbol)
+	} else if (head == 0) && (next_symbol == turing.Blank) {
 		// replace first symbol with a Blank and DO NOT move
 		next_conf.tape = append(prevTape[:0], prevTape[1:]...)
-		next_conf.index = index
+		next_conf.head = head
 		return next_conf, nil
 	} else {
 		next_conf.tape = prevTape
-		next_conf.tape[conf.index] = next_symbol
+		next_conf.tape[conf.head] = next_symbol
 	}
 
 	// move in the next direction
@@ -132,17 +158,17 @@ func next(conf twoWayConfig, next_state string, next_symbol string, next_move st
 	// move AFTER write, so take another len with the next tape
 	leng = len(next_conf.tape)
 
-	if (index == leng) && (next_move == turing.Right) {
-		next_conf.index = index
-	} else if (index == 0) && (next_move == turing.Left) {
-		next_conf.index = index
+	if (head == leng) && (next_move == ways.Right) {
+		next_conf.head = head
+	} else if (head == 0) && (next_move == ways.Left) {
+		next_conf.head = head
 	} else {
-		if next_move == turing.Right {
-			next_conf.index = index + 1
-		} else if next_move == Left {
-			next_conf.index = index - 1
+		if next_move == ways.Right {
+			next_conf.head = head + 1
+		} else if next_move == ways.Left {
+			next_conf.head = head - 1
 		} else {
-			return twoWayConfig{}, fmt.Errorf("%s is not a legal move, use %s or %s", next_move, turing.Right, turing.Left)
+			return twoWayConfig{}, fmt.Errorf("%s is not a legal move, use %s or %s", next_move, ways.Right, ways.Left)
 		}
 	}
 

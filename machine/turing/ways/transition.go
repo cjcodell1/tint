@@ -25,7 +25,7 @@ type output struct {
 }
 
 func MakeTransition(in_state string, in_sym string, out_state string, out_sym string, out_move string) Transition {
-	return Transition{in_state, in_sym, out_state, out_sym, out_move}
+	return Transition{input{in_state, in_sym}, output{out_state, out_sym, out_move}}
 }
 
 func (t Transition) GetInput() (string, string) {

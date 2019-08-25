@@ -3,7 +3,6 @@ package two
 import (
 	"strings"
 
-	"github.com/cjcodell1/tint/machine"
 	"github.com/cjcodell1/tint/machine/turing"
 )
 
@@ -13,7 +12,7 @@ type twoWayConfig struct {
 	head int
 }
 
-func (conf waysConfig) Print() string {
+func (conf twoWayConfig) Print() string {
 	var line1 strings.Builder
 	var line2 strings.Builder
 
