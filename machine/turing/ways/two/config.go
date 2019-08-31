@@ -33,21 +33,26 @@ func (conf twoWayConfig) Print() string {
 	line1.WriteString(" ")
 	line1.WriteString(turing.Blank)
 	line2.WriteString("  ")
-	carrot := 0
-	for _, sym := range conf.tape {
-		line1.WriteString(" ")
-		line1.WriteString(sym)
 
+	// now write what's on the tape
+	line1.WriteString(" ")
+	line1.WriteString(strings.Join(conf.tape, " "))
+
+	carrot := 0
+	for {
 		if carrot == conf.head {
 			line2.WriteString("^")
-		} else if carrot < conf.head {
-			carrot++
+			break
+		} else {
 			line2.WriteString(" ")
-			for _, _ = range sym {
+			for _, _ = range conf.tape[carrot] {
 				line2.WriteString(" ")
 			}
+			carrot += 1
 		}
 	}
+
+	// write the last blank
 	line1.WriteString(" ")
 	line1.WriteString(turing.Blank)
 
