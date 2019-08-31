@@ -4,17 +4,18 @@ package cli
 import (
 	"flag"
 	"fmt"
-	"log"
 	"strings"
+	"os"
 
 	"github.com/cjcodell1/tint/builder/yaml"
 	"github.com/cjcodell1/tint/file"
-	"github.com/cjcodell1/tint/machine/turing"
+	"github.com/cjcodell1/tint/machine"
 )
 
 var (
 	verboseFlag bool // prints out the step-by-step simulation
 	testFlag    bool // use a single test instead of a file of tests
+	machineFlag string // denotes what type of machine is specified
 )
 
 func init() {
@@ -27,11 +28,20 @@ func init() {
 
 func init() {
 	const (
-		usage = "provide a test to simulate on the the Turing machine (in place of a file of tests)"
+		usage = "provide a test to simulate on the machine (in place of a file of tests)"
 	)
 	flag.BoolVar(&testFlag, "test", false, usage)
 	flag.BoolVar(&testFlag, "t", false, usage+" (short-hand)")
 }
+
+func init() {
+	const (
+		usage = "denote what type of machine is specified"
+	)
+	flag.StringVar(&machineFlag, "machine", "", usage)
+	flag.StringVar(&machineFlag, "m", "", usage+" (short-hand)")
+}
+
 
 // Run starts the program by building the Turing machine and
 // simulating it with test(s).
@@ -44,18 +54,29 @@ func Run() {
 	// Ensures there are two non-flag arguments.
 	if len(flag.Args()) != 2 {
 		flag.PrintDefaults()
-		log.Fatalln("Please input a Turing machine and test(s).")
+		fmt.Println("Please provide the machine and test(s).")
+		os.Exit(1)
 	}
 
-	var machine turing.TuringMachine
+	// Ensures the machine flag was set.
+	if machineFlag == "" {
+		flag.PrintDefaults()
+		fmt.Println("Please provide the type of machine the file specifies.")
+		os.Exit(1)
+	}
+	// normalizes the machine flag
+	machineFlag = strings.ToLower(machineFlag)
+	var m machine.Machine
 	var tests []string
 
 	// Builds the Turing machine from the first non-flag argument.
-	tmPath := flag.Arg(0)
-	machine, err := yaml.Build(tmPath)
+	mPath := flag.Arg(0)
+	m, err := yaml.Build(mPath, machineFlag)
 	if err != nil {
 		flag.PrintDefaults()
-		log.Fatalln(err.Error())
+		fmt.Println("There was an error building your machine.")
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
 	// Builds the slice of tests used for testing from the second non-flag argument.
@@ -67,27 +88,54 @@ func Run() {
 		tests, err = file.ReadLines(testsPath)
 		if err != nil {
 			flag.PrintDefaults()
-			log.Fatalln(err.Error())
+			fmt.Println(err)
+			os.Exit(1)
 		}
 	}
 
 	// Simulate the test
+	totalAccept := 0
+	totalReject := 0
 	for _, input := range tests {
-		fmt.Printf("Simulating with %q.\n", input)
-		var conf turing.Config
-		for conf = machine.Start(input); !(machine.IsAccept(conf) || machine.IsReject(conf)); conf, err = machine.Step(conf) {
+		fmt.Printf("Simulating with %s.\n", input)
+
+		conf := m.Start(input)
+		for {
+			// refresh accept and reject
+			accept, err := m.IsAccept(conf)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			reject, err := m.IsReject(conf)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+
+			// print verbosely
 			if verboseFlag {
-				fmt.Println(simplePrintConf(conf))
+				fmt.Println(conf.Print())
+			}
+
+			// check if accept or reject and break
+			if accept {
+				totalAccept += 1
+				fmt.Println("Accepted.\n")
+				break
+			} else if reject {
+				totalReject += 1
+				fmt.Println("Rejected.\n")
+				break
+			}
+
+			// step
+			conf, err = m.Step(conf)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
 			}
 		}
-		if machine.IsAccept(conf) {
-			fmt.Println("Accepted.\n")
-		} else {
-			fmt.Println("Rejected.\n")
-		}
 	}
-}
-
-func simplePrintConf(conf turing.Config) string {
-	return fmt.Sprintf("%s: %q, at %d", conf.State, strings.Join(conf.Tape, " "), conf.Index)
+	fmt.Printf("%d accepted and %d rejected.\n", totalAccept, totalReject)
 }

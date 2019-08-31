@@ -8,19 +8,20 @@ import (
 
 type buildTest struct {
 	path     string
+	machine string
 	isErrNil bool
 }
 
 var buildTests = []buildTest{
-	{"examples/config1.yaml", true},
-	{"examples/config2.yaml", true},
-	{"examples/config3.yaml", true},
-	{"examples/config4.yaml", true},
+	{"examples/config1.yaml", "tm", true},
+	{"examples/config2.yaml", "tm", true},
+	{"examples/config3.yaml", "tm", true},
+	{"examples/config4.yaml", "tm", true},
 }
 
 func TestBuild(t *testing.T) {
 	for _, tc := range buildTests {
-		_, gotErr := yaml.Build(tc.path)
+		_, gotErr := yaml.Build(tc.path, tc.machine)
 		if tc.isErrNil && (gotErr != nil) {
 			var expectErr string
 			if tc.isErrNil {
