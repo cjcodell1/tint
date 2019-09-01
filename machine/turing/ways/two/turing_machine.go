@@ -66,15 +66,12 @@ func (tm turingMachine) Step(conf machine.Config) (machine.Config, error) {
 
 	next_state, next_symbol, next_move, err := tm.findTransition(state, symbol)
 	if err != nil {
-		fmt.Printf("STEP: %v\n", conf)
-		fmt.Printf("state: %s\nsymbol: %s\n", state, symbol)
-		fmt.Println("ERROR2")
-		return twoWayConfig{}, err
+		return nil, err
 	}
 
 	next_conf, err := next(twoWay, next_state, next_symbol, next_move)
 	if err != nil {
-		return twoWayConfig{}, err
+		return nil, err
 	}
 
 	return next_conf, nil
