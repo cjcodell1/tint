@@ -3,16 +3,17 @@ package two
 import (
 	"strings"
 
+	"github.com/cjcodell1/tint/machine"
 	"github.com/cjcodell1/tint/machine/turing"
 )
 
-type twoWayConfig struct {
+type config struct {
 	state string
 	tape  []string
 	head int
 }
 
-func (conf twoWayConfig) Print() string {
+func (conf config) Print() string {
 	var line1 strings.Builder
 	var line2 strings.Builder
 
@@ -57,4 +58,24 @@ func (conf twoWayConfig) Print() string {
 	line1.WriteString(turing.Blank)
 
 	return line1.String() + "\n" + line2.String()
+}
+
+
+func (conf config) IsState(state string) bool {
+	return conf.state == state
+}
+
+func (conf config) CanNext() bool {
+	return true
+}
+
+func (conf config) Next(inputs []string) (machine.Configuration, error) {
+
+}
+
+func (conf config) GetNext() ([]string, error) {
+	if conf.head < len(conf.tape) {
+		return []string{conf.state, conf.tape[conf.head]}, nil
+	}
+	return []string{conf.state, turing.Blank}, nil
 }

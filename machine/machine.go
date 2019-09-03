@@ -1,3 +1,4 @@
+// Package for all machines.
 package machine
 
 // represents the available types of machines
@@ -14,6 +15,6 @@ const (
 type Machine interface {
 	Start(input string) Config
 	Step(conf Config) (Config, error)
-	IsAccept(conf Config) (bool, error)
-	IsReject(conf Config) (bool, error)
+	IsAccept(conf Config) bool
+	IsReject(conf Config) bool
 }

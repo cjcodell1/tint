@@ -1,6 +1,12 @@
 package dfa
 
-type Transition struct {
+import (
+	"errors"
+
+	"github.com/cjcodell1/tint/machine"
+)
+
+type transition struct {
 	in input
 	out output
 }
@@ -11,17 +17,33 @@ type input struct {
 }
 
 type output struct {
-	symbol string
+	state string
 }
 
-func MakeTransition(in_state string, in_symbol string, out_state string) {
-	return Transition{input{in_state, in_symbol}, output{out_state}}
+// output: [state, symbol]
+func (t machine.Transition) GetInput() []string {
+	return []string{t.in.state, t.in.symbol}
 }
 
-func (t Transition) GetInput() (string, string) {
-	return t.in.state, t.in.symbol
+// output: [state]
+func (t machine.Transition) GetOutput() []string {
+	return []string{t.out.state}
 }
 
-func (t Transition) GetOutput() string {
-	return t.out.state
+// input: [state, symbol]
+func (t machine.Transition) IsInput(inputs []string) (bool, error) {
+	if len(inputs) != 2 {
+		return false, errors.New("Illegal Transition.")
+	}
+
+	return (t.in.state == inputs[0] && t.in.symbol == inputs[1]), nil
+}
+
+// input: [state]
+func (t machine.Transition) IsOutput(inputs []string) (bool, error) {
+	if len(inputs) != 1 {
+		return false, errors.New("Illegal Transition.")
+	}
+
+	return (t.out.state == inputs[0]), nil
 }

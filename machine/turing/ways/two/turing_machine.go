@@ -13,9 +13,9 @@ import (
 
 type turingMachine struct {
 	trans       []ways.Transition
-	startState  string
-	acceptState string
-	rejectState string
+	start  string
+	accept string
+	reject string
 }
 
 // NewTuringMachine is the constructor for a turingMachine.
@@ -30,38 +30,24 @@ func MakeTuringMachine(trans []ways.Transition, start string, accept string, rej
 
 // Start builds the first Config given a space-delimited input string.
 func (tm turingMachine) Start(input string) machine.Config {
-	return twoWayConfig{tm.startState, strings.Fields(input), 0}
+	return twoWayConfig{tm.start, strings.Fields(input), 0}
 }
 
 // Step applies one transition to the given Config.
 // Applies no transition if the Config is in an accept or reject state.
 // Errors when there is no transition for the Config.
 func (tm turingMachine) Step(conf machine.Config) (machine.Config, error) {
-	twoWay, ok := conf.(twoWayConfig)
-	if !ok {
-		errors.New("Cannot convert config to correct type for two-way Turing machines.")
-	}
-	state := twoWay.state
 
 	// if the state is accept or reject, then don't do anything
-	accept, err := tm.IsAccept(conf)
-	if err != nil {
-		return nil, err
-	}
-	reject, err := tm.IsReject(conf)
-	if err != nil {
-		return nil, err
-	}
-
-	if (accept || reject) {
+	if (tm.IsAccept(conf) || tm.IsReject(conf)) {
 		return conf, nil
 	}
 
 	var symbol string
-	if twoWay.head == len(twoWay.tape) {
+	if conf.head == len(conf.tape) {
 		symbol = turing.Blank
 	} else {
-		symbol = twoWay.tape[twoWay.head]
+		symbol = conf.tape[conf.head]
 	}
 
 	next_state, next_symbol, next_move, err := tm.findTransition(state, symbol)
@@ -69,7 +55,7 @@ func (tm turingMachine) Step(conf machine.Config) (machine.Config, error) {
 		return nil, err
 	}
 
-	next_conf, err := next(twoWay, next_state, next_symbol, next_move)
+	next_conf, err := next(conf, next_state, next_symbol, next_move)
 	if err != nil {
 		return nil, err
 	}
@@ -83,16 +69,12 @@ func (tm turingMachine) IsAccept(conf machine.Config) (bool, error) {
 	if !ok {
 		return false, errors.New("Cannot convert config to correct type for two-way Turing machines.")
 	}
-	return tm.acceptState == twoWay.state, nil
+	return tm.accept == twoWay.state, nil
 }
 
 // IsReject returns true if the Config is in a reject state.
-func (tm turingMachine) IsReject(conf machine.Config) (bool, error) {
-	twoWay, ok := conf.(twoWayConfig)
-	if !ok {
-		return false, errors.New("Cannot convert config to correct type for two-way Turing machines.")
-	}
-	return tm.rejectState == twoWay.state, nil
+func (tm turingMachine) IsReject(conf machine.Config) bool {
+	return conf.IsState(tm.reject)
 }
 
 func (tm turingMachine) findTransition(state string, symbol string) (string, string, string, error) {
