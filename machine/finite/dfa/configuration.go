@@ -3,6 +3,8 @@ package dfa
 import (
 	"strings"
 	"errors"
+
+	"github.com/cjcodell1/tint/machine"
 )
 
 type config struct {
@@ -14,7 +16,7 @@ func (conf config) Print() string {
 	var line strings.Builder
 
 	// the WriteString method on a strings.Builder always returns a nil error
-	line.WriteString(conf.State)
+	line.WriteString(conf.state)
 	line.WriteString(" ")
 	line.WriteString(strings.Join(conf.input, " "))
 	return line.String()
@@ -25,7 +27,7 @@ func (conf config) IsState(state string) bool {
 }
 
 func (conf config) CanNext() bool {
-	return len(config.input) != 0
+	return len(conf.input) != 0
 }
 
 func (conf config) Next(inputs []string) (machine.Configuration, error) {
@@ -42,7 +44,7 @@ func (conf config) Next(inputs []string) (machine.Configuration, error) {
 	prevInput := make([]string, len(conf.input))
 	copy(prevInput, conf.input)
 
-	return config{inputs[0], prevInput[1:]}
+	return config{inputs[0], prevInput[1:]}, nil
 }
 
 func (conf config) GetNext() ([]string, error) {

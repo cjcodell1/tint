@@ -13,8 +13,8 @@ const (
 
 // interface for all Machines (e.g. DFA, NFA, PDA, various TMs, etc.)
 type Machine interface {
-	Start(input string) Config
-	Step(conf Config) (Config, error)
-	IsAccept(conf Config) bool
-	IsReject(conf Config) bool
+	Start(input string) Configuration
+	Step(conf Configuration) (Configuration, error)
+	IsAccept(conf Configuration) bool
+	IsReject(conf Configuration) bool
 }

@@ -1,10 +1,11 @@
 package dfa
 
 import (
-
+	"fmt"
+	"errors"
+	"strings"
 
 	"github.com/cjcodell1/tint/machine"
-	"github.com/cjcodell1/tint/machine/finite"
 )
 
 type dfa struct {
@@ -13,24 +14,24 @@ type dfa struct {
 	accepts []string
 }
 
-func MakeDFA(trans []string, start string, accepts []string) (machine.Machine, error) {
+func MakeDFA(trans [][]string, start string, accepts []string) (machine.Machine, error) {
 	transitions := []transition{}
 	for _, tran := range trans {
 		t, err := makeTransition(tran)
 		if err != nil {
 			return nil, err
 		}
-		transitions = append(transitions, makeTransition(t)
+		transitions = append(transitions, t)
 	}
 
 	return dfa{transitions, start, accepts}, nil
 }
 
-func (d dfa) Start(input string) machine.Config {
-	return finite.Config{d.start, strings.Fields(input)}, nil
+func (d dfa) Start(input string) machine.Configuration {
+	return config{d.start, strings.Fields(input)}
 }
 
-func (d dfa) Step(conf machine.Config) (machine.Config, error) {
+func (d dfa) Step(conf machine.Configuration) (machine.Configuration, error) {
 	important, err := conf.GetNext()
 	if err != nil {
 		return nil, err
@@ -48,7 +49,7 @@ func (d dfa) Step(conf machine.Config) (machine.Config, error) {
 		return nil, err
 	}
 
-	next_conf, err := conf.Next(next_state)
+	next_conf, err := conf.Next([]string{next_state})
 	if err != nil {
 		return nil, err
 	}
@@ -56,33 +57,35 @@ func (d dfa) Step(conf machine.Config) (machine.Config, error) {
 	return next_conf, nil
 }
 
-func (d dfa) IsAccept(conf machine.Config) bool {
+func (d dfa) IsAccept(conf machine.Configuration) bool {
 	if !conf.CanNext() {
 		for _, state := range d.accepts {
 			if conf.IsState(state) {
 				return true
 			}
 		}
+		return false
 	}
 	return false
 }
 
-func (d dfa) IsReject(conf machine.Config) bool {
+func (d dfa) IsReject(conf machine.Configuration) bool {
 	if !conf.CanNext() {
 		for _, state := range d.accepts {
 			if conf.IsState(state) {
 				return false
 			}
 		}
+		return true
 	}
-	return true
+	return false
 }
 
-func makeTransition(inputs []string) {
+func makeTransition(inputs []string) (transition, error) {
 	if len(inputs) != 3 {
-		return nil, errors.New("Illegal Transition.")
+		return transition{}, errors.New("Illegal Transition.")
 	}
-	return transition{input{inputs[0], inputs[1]}, output{inputs[2]}}
+	return transition{input{inputs[0], inputs[1]}, output{inputs[2]}}, nil
 }
 
 func (d dfa) findTransition(state string, symbol string) (string, error) {
@@ -91,8 +94,10 @@ func (d dfa) findTransition(state string, symbol string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		output := trans.GetOutput()
-		return output[0], nil
+		if ans {
+			output := trans.GetOutput()
+			return output[0], nil
+		}
 	}
 	// no transition found
 	return "", fmt.Errorf("No transition found for state: \"%s\" and symbol \"%s\"", state, symbol)
