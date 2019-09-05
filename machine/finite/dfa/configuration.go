@@ -17,7 +17,7 @@ func (conf config) Print() string {
 
 	// the WriteString method on a strings.Builder always returns a nil error
 	line.WriteString(conf.state)
-	line.WriteString(" ")
+	line.WriteString(": ")
 	line.WriteString(strings.Join(conf.input, " "))
 	return line.String()
 }

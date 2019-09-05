@@ -1,0 +1,9 @@
+---
+# recognizes the language \Sigma^*
+# over the alphabet {a, b}
+
+start: start
+accept-states: ["start"]
+transitions:
+  - ["start", "a", "start"]
+  - ["start", "b", "start"]

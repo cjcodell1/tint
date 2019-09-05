@@ -136,15 +136,15 @@ var redLightDFA, _ = dfa.MakeDFA(
 		{"start", "g", "green"},
 
 		{"red", "r", "error"},
-		{"red", "y", "yellow"},
-		{"red", "g", "error"},
+		{"red", "y", "error"},
+		{"red", "g", "green"},
 
-		{"yellow", "r", "error"},
+		{"yellow", "r", "red"},
 		{"yellow", "y", "error"},
-		{"yellow", "g", "green"},
+		{"yellow", "g", "error"},
 
-		{"green", "r", "red"},
-		{"green", "y", "error"},
+		{"green", "r", "error"},
+		{"green", "y", "yellow"},
 		{"green", "g", "error"},
 
 		{"error", "r", "error"},
@@ -195,19 +195,19 @@ func init() {
 		{emptyDFA, "emptyDFA", step1, "{reject []}", nil},
 	}...)
 
-	start = redLightDFA.Start("r y g r y g")
+	start = redLightDFA.Start("r g y r g y")
 	step1, _ = redLightDFA.Step(start)
 	step2, _ = redLightDFA.Step(step1)
 	step3, _ = redLightDFA.Step(step2)
 	step4, _ = redLightDFA.Step(step3)
 	step5, _ = redLightDFA.Step(step4)
 	stepTests = append(stepTests, []stepT{
-		{redLightDFA, "redLightDFA", start, "{red [y g r y g]}", nil},
-		{redLightDFA, "redLightDFA", step1, "{yellow [g r y g]}", nil},
-		{redLightDFA, "redLightDFA", step2, "{green [r y g]}", nil},
-		{redLightDFA, "redLightDFA", step3, "{red [y g]}", nil},
-		{redLightDFA, "redLightDFA", step4, "{yellow [g]}", nil},
-		{redLightDFA, "redLightDFA", step5, "{green []}", nil},
+		{redLightDFA, "redLightDFA", start, "{red [g y r g y]}", nil},
+		{redLightDFA, "redLightDFA", step1, "{green [y r g y]}", nil},
+		{redLightDFA, "redLightDFA", step2, "{yellow [r g y]}", nil},
+		{redLightDFA, "redLightDFA", step3, "{red [g y]}", nil},
+		{redLightDFA, "redLightDFA", step4, "{green [y]}", nil},
+		{redLightDFA, "redLightDFA", step5, "{yellow []}", nil},
 	}...)
 
 	start = mod2DFA.Start("a a")
@@ -243,7 +243,7 @@ func init() {
 		{emptyDFA, "emptyDFA", step2, false},
 	}...)
 
-	start = redLightDFA.Start("r y g")
+	start = redLightDFA.Start("r g y")
 	step1, _ = redLightDFA.Step(start)
 	step2, _ = redLightDFA.Step(step1)
 	step3, _ = redLightDFA.Step(step2)
@@ -271,7 +271,7 @@ func init() {
 		{emptyDFA, "emptyDFA", step2, true},
 	}...)
 
-	start = redLightDFA.Start("r y g")
+	start = redLightDFA.Start("r g y")
 	step1, _ = redLightDFA.Step(start)
 	step2, _ = redLightDFA.Step(step1)
 	step3, _ = redLightDFA.Step(step2)

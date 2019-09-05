@@ -37,8 +37,7 @@ func Build(configPath string, machineType string) (machine.Machine, error) {
 	switch machineType {
 		case machine.DFA:
 			//b, ok : = b.(dfaBuilder)
-			//var b dfaBuilder
-			var b tmBuilder //TODO change!
+			var b dfaBuilder
 
 			err= yaml.Unmarshal([]byte(config), &b)
 			if err != nil {
@@ -55,7 +54,8 @@ func Build(configPath string, machineType string) (machine.Machine, error) {
 
 		case machine.TM:
 			//b, ok := b.(tmBuilder)
-			var b tmBuilder
+			//var b tmBuilder
+			var b dfaBuilder // TODO change!!
 
 			err= yaml.Unmarshal([]byte(config), &b)
 			if err != nil {

@@ -96,34 +96,23 @@ func Run() {
 	// Simulate the test
 	totalAccept := 0
 	totalReject := 0
+	totalError := 0
 	for _, input := range tests {
 		fmt.Printf("Simulating with %s.\n", input)
 
 		conf := m.Start(input)
 		for {
-			// refresh accept and reject
-			accept, err := m.IsAccept(conf)
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
-			reject, err := m.IsReject(conf)
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
-
 			// print verbosely
 			if verboseFlag {
 				fmt.Println(conf.Print())
 			}
 
 			// check if accept or reject and break
-			if accept {
+			if m.IsAccept(conf) {
 				totalAccept += 1
 				fmt.Println("Accepted.\n")
 				break
-			} else if reject {
+			} else if m.IsReject(conf) {
 				totalReject += 1
 				fmt.Println("Rejected.\n")
 				break
@@ -132,10 +121,15 @@ func Run() {
 			// step
 			conf, err = m.Step(conf)
 			if err != nil {
+				fmt.Println("ERROR! Please see below:")
 				fmt.Println(err)
-				os.Exit(1)
+				fmt.Println("Skipping this test.")
+				totalError += 1
+				break
 			}
 		}
 	}
-	fmt.Printf("%d accepted and %d rejected.\n", totalAccept, totalReject)
+	fmt.Printf("%d accepted.\n", totalAccept)
+	fmt.Printf("%d rejected.\n", totalReject)
+	fmt.Printf("%d errors.\n", totalError)
 }
