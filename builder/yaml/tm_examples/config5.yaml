@@ -1,0 +1,7 @@
+start: one
+accept: four
+reject: bad
+transitions:
+  - [one, "*", two, _, R]
+  - [two, "*", three, _, R]
+  - [three, "*", four, _, R]
