@@ -98,7 +98,7 @@ func Run() {
 	totalReject := 0
 	totalError := 0
 	for _, input := range tests {
-		fmt.Printf("Simulating with %s.\n", input)
+		fmt.Printf("Simulating with \"%s\".\n", input)
 
 		conf := m.Start(input)
 		for {
@@ -123,7 +123,7 @@ func Run() {
 			if err != nil {
 				fmt.Println("ERROR! Please see below:")
 				fmt.Println(err)
-				fmt.Println("Skipping this test.")
+				fmt.Println("Skipping this test.\n")
 				totalError += 1
 				break
 			}

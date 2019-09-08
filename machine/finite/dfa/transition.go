@@ -18,6 +18,13 @@ type output struct {
 	state string
 }
 
+func makeTransition(inputs []string) (transition, error) {
+	if len(inputs) != 3 {
+		return transition{}, errors.New("Illegal Transition.")
+	}
+	return transition{input{inputs[0], inputs[1]}, output{inputs[2]}}, nil
+}
+
 // output: [state, symbol]
 func (t transition) GetInput() []string {
 	return []string{t.in.state, t.in.symbol}

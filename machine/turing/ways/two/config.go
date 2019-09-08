@@ -1,19 +1,21 @@
 package two
 
 import (
+	"fmt"
 	"strings"
+	"errors"
 
 	"github.com/cjcodell1/tint/machine"
 	"github.com/cjcodell1/tint/machine/turing"
 )
 
-type config struct {
+type configuration struct {
 	state string
 	tape  []string
 	head int
 }
 
-func (conf config) Print() string {
+func (conf configuration) Print() string {
 	var line1 strings.Builder
 	var line2 strings.Builder
 
@@ -61,19 +63,74 @@ func (conf config) Print() string {
 }
 
 
-func (conf config) IsState(state string) bool {
+func (conf configuration) IsState(state string) bool {
 	return conf.state == state
 }
 
-func (conf config) CanNext() bool {
+func (conf configuration) CanNext() bool {
 	return true
 }
 
-func (conf config) Next(inputs []string) (machine.Configuration, error) {
+func (conf configuration) Next(inputs []string) (machine.Configuration, error) {
+	if len(inputs) != 3 {
+		return nil, errors.New("Illegal configuration.")
+	}
 
+	next_state := inputs[0]
+	next_symbol := inputs[1]
+	next_move := inputs[2]
+
+	// Assume that conf is not in an accept or a reject state.
+
+	// Don't want to mutate
+	prevTape := make([]string, len(conf.tape))
+	copy(prevTape, conf.tape)
+
+	var next_conf configuration
+	// transition to the next state
+	next_conf.state = next_state
+
+	leng := len(prevTape)
+	head := conf.head
+
+	// write the next symbol
+	if (head == leng) && (next_symbol == turing.Blank) {
+		next_conf.tape = prevTape
+	} else if (head == leng) && (next_symbol != turing.Blank) {
+		next_conf.tape = append(prevTape, next_symbol)
+	} else if (head == 0) && (next_symbol == turing.Blank) {
+		// replace first symbol with a Blank and DO NOT move
+		next_conf.tape = append(prevTape[:0], prevTape[1:]...)
+		next_conf.head = head
+		return next_conf, nil
+	} else {
+		next_conf.tape = prevTape
+		next_conf.tape[conf.head] = next_symbol
+	}
+
+	// move in the next direction
+
+	// move AFTER write, so take another len with the next tape
+	leng = len(next_conf.tape)
+
+	if (head == leng) && (next_move == turing.Right) {
+		next_conf.head = head
+	} else if (head == 0) && (next_move == turing.Left) {
+		next_conf.head = head
+	} else {
+		if next_move == turing.Right {
+			next_conf.head = head + 1
+		} else if next_move == turing.Left {
+			next_conf.head = head - 1
+		} else {
+			return configuration{}, fmt.Errorf("%s is not a legal move, use %s or %s", next_move, turing.Right, turing.Left)
+		}
+	}
+
+	return next_conf, nil
 }
 
-func (conf config) GetNext() ([]string, error) {
+func (conf configuration) GetNext() ([]string, error) {
 	if conf.head < len(conf.tape) {
 		return []string{conf.state, conf.tape[conf.head]}, nil
 	}

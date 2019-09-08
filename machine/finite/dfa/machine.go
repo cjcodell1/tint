@@ -81,13 +81,6 @@ func (d dfa) IsReject(conf machine.Configuration) bool {
 	return false
 }
 
-func makeTransition(inputs []string) (transition, error) {
-	if len(inputs) != 3 {
-		return transition{}, errors.New("Illegal Transition.")
-	}
-	return transition{input{inputs[0], inputs[1]}, output{inputs[2]}}, nil
-}
-
 func (d dfa) findTransition(state string, symbol string) (string, error) {
 	for _, trans := range d.trans {
 		ans, err := trans.IsInput([]string{state, symbol})

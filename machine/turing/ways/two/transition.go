@@ -4,11 +4,6 @@ import (
 	"errors"
 )
 
-const (
-	Left  string = "L"
-	Right string = "R"
-)
-
 // Transition represents a transition function.
 type transition struct {
 	in  input
@@ -28,6 +23,13 @@ type output struct {
 	move   string
 }
 
+func makeTransition(inputs []string) (transition, error) {
+	if len(inputs) != 5 {
+		return transition{}, errors.New("Illegal Transition.")
+	}
+	return transition{input{inputs[0], inputs[1]}, output{inputs[2], inputs[3], inputs[4]}}, nil
+}
+
 // Output: [state, symbol]
 func (t transition) GetInput() []string {
 	return []string{t.in.state, t.in.symbol}
@@ -43,7 +45,7 @@ func (t transition) IsInput(inputs []string) (bool, error) {
 	if len(inputs) != 2 {
 		return false, errors.New("Illegal Transition.")
 	}
-	return t.in.state == inputs[0] && t.in.symbol == inputs[1]
+	return t.in.state == inputs[0] && t.in.symbol == inputs[1], nil
 }
 
 // Input: [state, symbol, move]
@@ -51,5 +53,5 @@ func (t transition) IsOutput(inputs []string) (bool, error) {
 	if len(inputs) != 3 {
 		return false, errors.New("Illegal Transition.")
 	}
-	return t.out.state == inputs[0] && t.out.symbol == inputs[1] && t.out.symbol == inputs[2]
+	return t.out.state == inputs[0] && t.out.symbol == inputs[1] && t.out.symbol == inputs[2], nil
 }
