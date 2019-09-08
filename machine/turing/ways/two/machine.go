@@ -1,16 +1,15 @@
 package two
 
 import (
+	"errors"
 	"fmt"
 	"strings"
-	"errors"
 
 	"github.com/cjcodell1/tint/machine"
 )
 
-
 type turingMachine struct {
-	trans       []transition
+	trans  []transition
 	start  string
 	accept string
 	reject string
@@ -45,7 +44,7 @@ func (tm turingMachine) Start(input string) machine.Configuration {
 func (tm turingMachine) Step(conf machine.Configuration) (machine.Configuration, error) {
 
 	// if the state is accept or reject, then don't do anything
-	if (tm.IsAccept(conf) || tm.IsReject(conf)) {
+	if tm.IsAccept(conf) || tm.IsReject(conf) {
 		return conf, nil
 	}
 

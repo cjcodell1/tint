@@ -1,8 +1,8 @@
 package dfa
 
 import (
-	"strings"
 	"errors"
+	"strings"
 
 	"github.com/cjcodell1/tint/machine"
 )

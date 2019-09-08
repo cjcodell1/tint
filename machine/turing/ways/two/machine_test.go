@@ -1,8 +1,8 @@
 package two_test
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 
 	"github.com/cjcodell1/tint/machine"
 	"github.com/cjcodell1/tint/machine/turing"
@@ -11,41 +11,41 @@ import (
 
 // MakeTuringMachine
 type makeTuringMachine struct {
-	trans [][]string
-	start string
+	trans  [][]string
+	start  string
 	accept string
 	reject string
 }
 
 // Start
 type start struct {
-	tm machine.Machine
+	tm     machine.Machine
 	tmName string
-	input string
+	input  string
 	expect string
 }
 
 // Step
 type step struct {
-	tm machine.Machine
+	tm     machine.Machine
 	tmName string
-	input machine.Configuration
+	input  machine.Configuration
 	expect string
 }
 
 // IsAccept
 type isAccept struct {
-	tm machine.Machine
+	tm     machine.Machine
 	tmName string
-	input machine.Configuration
+	input  machine.Configuration
 	expect bool
 }
 
 // IsReject
 type isReject struct {
-	tm machine.Machine
+	tm     machine.Machine
 	tmName string
-	input machine.Configuration
+	input  machine.Configuration
 	expect bool
 }
 
@@ -111,7 +111,6 @@ func TestIsReject(t *testing.T) {
 		}
 	}
 }
-
 
 // Turing machines to test
 var emptyTM, _ = two.MakeTuringMachine(

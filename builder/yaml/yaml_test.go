@@ -7,9 +7,9 @@ import (
 )
 
 type buildTest struct {
-	path     string
+	path    string
 	machine string
-	err error
+	err     error
 }
 
 var buildTests = []buildTest{
@@ -26,8 +26,8 @@ var buildTests = []buildTest{
 func TestBuild(t *testing.T) {
 	for _, tc := range buildTests {
 		_, err := yaml.Build(tc.path, tc.machine)
-			if err != tc.err {
-				t.Errorf("Build(%s, %s) == some_machine, %s != some_machine, %s", tc.path, tc.machine, err, tc.err)
+		if err != tc.err {
+			t.Errorf("Build(%s, %s) == some_machine, %s != some_machine, %s", tc.path, tc.machine, err, tc.err)
 		}
 	}
 }

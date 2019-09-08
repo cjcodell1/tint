@@ -1,46 +1,46 @@
 package dfa_test
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 
 	"github.com/cjcodell1/tint/machine"
 	"github.com/cjcodell1/tint/machine/finite/dfa"
 )
 
 type makeDFAT struct {
-	trans [][]string
-	start string
+	trans   [][]string
+	start   string
 	accepts []string
-	err error
+	err     error
 }
 
 type startT struct {
-	d machine.Machine
-	name string
-	input string
+	d      machine.Machine
+	name   string
+	input  string
 	expect string
 }
 
 type stepT struct {
-	d machine.Machine
-	name string
-	input machine.Configuration
+	d      machine.Machine
+	name   string
+	input  machine.Configuration
 	expect string
-	err error
+	err    error
 }
 
 type isAcceptT struct {
-	d machine.Machine
-	name string
-	input machine.Configuration
+	d      machine.Machine
+	name   string
+	input  machine.Configuration
 	expect bool
 }
 
 type isRejectT struct {
-	d machine.Machine
-	name string
-	input machine.Configuration
+	d      machine.Machine
+	name   string
+	input  machine.Configuration
 	expect bool
 }
 
@@ -247,7 +247,7 @@ func init() {
 	step1, _ = redLightDFA.Step(start)
 	step2, _ = redLightDFA.Step(step1)
 	step3, _ = redLightDFA.Step(step2)
-	isAcceptTests = append(isAcceptTests,[]isAcceptT{
+	isAcceptTests = append(isAcceptTests, []isAcceptT{
 		{redLightDFA, "redLightDFA", start, false},
 		{redLightDFA, "redLightDFA", step1, false},
 		{redLightDFA, "redLightDFA", step2, false},
@@ -275,7 +275,7 @@ func init() {
 	step1, _ = redLightDFA.Step(start)
 	step2, _ = redLightDFA.Step(step1)
 	step3, _ = redLightDFA.Step(step2)
-	isRejectTests = append(isRejectTests,[]isRejectT{
+	isRejectTests = append(isRejectTests, []isRejectT{
 		{redLightDFA, "redLightDFA", start, false},
 		{redLightDFA, "redLightDFA", step1, false},
 		{redLightDFA, "redLightDFA", step2, false},

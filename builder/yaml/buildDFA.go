@@ -8,8 +8,8 @@ import (
 // dfaBuilder is the struct to marshal the YAML.
 type dfaBuilder struct {
 	// These must be export, yaml parser requires it.
-	Start string
-	Accepts []string `yaml:"accept-states"` // renamed to accept-states
+	Start       string
+	Accepts     []string `yaml:"accept-states"` // renamed to accept-states
 	Transitions [][]string
 }
 

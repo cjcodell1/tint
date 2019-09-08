@@ -4,8 +4,8 @@ package cli
 import (
 	"flag"
 	"fmt"
-	"strings"
 	"os"
+	"strings"
 
 	"github.com/cjcodell1/tint/builder/yaml"
 	"github.com/cjcodell1/tint/file"
@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	verboseFlag bool // prints out the step-by-step simulation
-	testFlag    bool // use a single test instead of a file of tests
+	verboseFlag bool   // prints out the step-by-step simulation
+	testFlag    bool   // use a single test instead of a file of tests
 	machineFlag string // denotes what type of machine is specified
 )
 
@@ -41,7 +41,6 @@ func init() {
 	flag.StringVar(&machineFlag, "machine", "", usage)
 	flag.StringVar(&machineFlag, "m", "", usage+" (short-hand)")
 }
-
 
 // Run starts the program by building the Turing machine and
 // simulating it with test(s).

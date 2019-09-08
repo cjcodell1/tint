@@ -1,9 +1,9 @@
 package two
 
 import (
+	"errors"
 	"fmt"
 	"strings"
-	"errors"
 
 	"github.com/cjcodell1/tint/machine"
 	"github.com/cjcodell1/tint/machine/turing"
@@ -12,7 +12,7 @@ import (
 type configuration struct {
 	state string
 	tape  []string
-	head int
+	head  int
 }
 
 func (conf configuration) Print() string {
@@ -61,7 +61,6 @@ func (conf configuration) Print() string {
 
 	return line1.String() + "\n" + line2.String()
 }
-
 
 func (conf configuration) IsState(state string) bool {
 	return conf.state == state

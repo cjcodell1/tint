@@ -4,7 +4,7 @@ package machine
 // represents the available types of machines
 const (
 	DFA = "dfa"
-	TM = "tm"
+	TM  = "tm"
 )
 
 const (

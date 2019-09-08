@@ -5,12 +5,12 @@ import (
 )
 
 type transition struct {
-	in input
+	in  input
 	out output
 }
 
 type input struct {
-	state string
+	state  string
 	symbol string
 }
 

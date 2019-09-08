@@ -1,16 +1,16 @@
 package dfa
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/cjcodell1/tint/machine"
 )
 
 type dfa struct {
-	trans []transition
-	start string
+	trans   []transition
+	start   string
 	accepts []string
 }
 
