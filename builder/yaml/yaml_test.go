@@ -7,34 +7,27 @@ import (
 )
 
 type buildTest struct {
-	path     string
-	isErrNil bool
+	path    string
+	machine string
+	err     error
 }
 
 var buildTests = []buildTest{
-	{"examples/config1.yaml", true},
-	{"examples/config2.yaml", true},
-	{"examples/config3.yaml", true},
-	{"examples/config4.yaml", true},
+	//{"tm_examples/config1.yaml", "tm", nil},
+	//{"tm_examples/config2.yaml", "tm", nil},
+	//{"tm_examples/config3.yaml", "tm", nil},
+	//{"tm_examples/config4.yaml", "tm", nil},
+
+	{"dfa_examples/config1.yaml", "dfa", nil},
+	{"dfa_examples/config2.yaml", "dfa", nil},
+	{"dfa_examples/config3.yaml", "dfa", nil},
 }
 
 func TestBuild(t *testing.T) {
 	for _, tc := range buildTests {
-		_, gotErr := yaml.Build(tc.path)
-		if tc.isErrNil && (gotErr != nil) {
-			var expectErr string
-			if tc.isErrNil {
-				expectErr = "nil"
-			} else {
-				expectErr = "non-nil"
-			}
-
-			if gotErr == nil {
-				t.Errorf("Build(%s) == some_tm, %s != some_tm, %s", tc.path, "nil", expectErr)
-			} else {
-				t.Errorf("Build(%s) == some_tm, %s != some_tm, %s", tc.path, gotErr.Error(), expectErr)
-			}
-
+		_, err := yaml.Build(tc.path, tc.machine)
+		if err != tc.err {
+			t.Errorf("Build(%s, %s) == some_machine, %s != some_machine, %s", tc.path, tc.machine, err, tc.err)
 		}
 	}
 }

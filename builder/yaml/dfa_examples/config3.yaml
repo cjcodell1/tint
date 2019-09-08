@@ -1,0 +1,26 @@
+---
+# recognizes the language of valid traffic light sequences
+# over the language {r, y, g}
+
+start: "start"
+accept-states: ["red", "yellow", "green"]
+transitions:
+  - [start, r, red]
+  - [start, y, yellow]
+  - [start, g, green]
+
+  - [red, r, error]
+  - [red, y, error]
+  - [red, g, green]
+
+  - [yellow, r, red]
+  - [yellow, y, error]
+  - [yellow, g, error]
+
+  - [green, r, error]
+  - [green, y, yellow]
+  - [green, g, error]
+
+  - [error, r, error]
+  - [error, y, error]
+  - [error, g, error]

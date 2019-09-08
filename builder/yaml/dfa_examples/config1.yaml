@@ -1,0 +1,9 @@
+---
+# recognizes the empty language
+# over the alphabet {a, b}
+
+start: start
+accept-states: []
+transitions:
+  - [start, a, start]
+  - [start, b, start]

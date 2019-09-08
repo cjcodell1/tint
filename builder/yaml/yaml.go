@@ -2,45 +2,76 @@
 package yaml
 
 import (
-	"github.com/cjcodell1/tint/file"
-	"github.com/cjcodell1/tint/machine/turing"
+	"fmt"
+
 	"gopkg.in/yaml.v2"
+
+	"github.com/cjcodell1/tint/file"
+	"github.com/cjcodell1/tint/machine"
 )
 
-// tmBuilder is the struct to use to marshal the YAML.
-type tmBuilder struct {
-	// These must be exported, yaml parser requires it.
-	Start       string
-	Accept      string
-	Reject      string
-	Transitions [][5]string
+type builder interface {
+	subBuild() (machine.Machine, error)
 }
 
+type strawman struct{}
+
+func (s strawman) subBuild() (machine.Machine, error) { return nil, nil }
+
 // Build creates a Turing machine from a YAML file.
-func Build(configPath string) (turing.TuringMachine, error) {
+func Build(configPath string, machineType string) (machine.Machine, error) {
 
-	config, errRead := file.ReadAll(configPath)
-	if errRead != nil {
-		return nil, errRead
+	var config string
+	var err error
+
+	// Read the file
+	config, err = file.ReadAll(configPath)
+	if err != nil {
+		return nil, err
 	}
 
-	var builder tmBuilder
+	// Unmarshal the YAML
+	// TODO figure out how to change the builder in the switch like this
+	// 		so I don't have to copy/paste the Unmarshalling and subBuilding each time
+	//var b builder
 
-	errUnMarsh := yaml.Unmarshal([]byte(config), &builder)
-	if errUnMarsh != nil {
-		return nil, errUnMarsh
+	switch machineType {
+	case machine.DFA:
+		//b, ok : = b.(dfaBuilder)
+		var b dfaBuilder
+
+		err = yaml.Unmarshal([]byte(config), &b)
+		if err != nil {
+			return nil, err
+		}
+
+		// Build the machine
+		machine, err := b.subBuild()
+		if err != nil {
+			return nil, err
+		}
+
+		return machine, nil
+
+	case machine.TM:
+		//b, ok := b.(tmBuilder)
+		var b tmBuilder
+
+		err = yaml.Unmarshal([]byte(config), &b)
+		if err != nil {
+			return nil, err
+		}
+
+		// Build the machine
+		machine, err := b.subBuild()
+		if err != nil {
+			return nil, err
+		}
+
+		return machine, nil
+
+	default:
+		err = fmt.Errorf("%s is not a valid machine type.", machineType)
+		return nil, err
 	}
-
-	var trans []turing.Transition
-	for _, t := range builder.Transitions {
-		trans = append(trans, turing.Transition{turing.Input{t[0], t[1]}, turing.Output{t[2], t[3], t[4]}})
-	}
-
-	tm, errBuild := turing.NewTuringMachine(trans, builder.Start, builder.Accept, builder.Reject)
-	if errBuild != nil {
-		return nil, errBuild
-	}
-
-	return tm, nil
-
 }
