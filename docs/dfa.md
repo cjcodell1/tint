@@ -25,6 +25,9 @@ SYMBOL --> string
 ## Example
 
 ```
+# Recognizes the language of strings with "abc" as a substring
+# over the alphabet {"a", "b", "c"}
+
 start: seen0
 accept-states: [seenABC]
 transitions:
@@ -45,7 +48,7 @@ transitions:
   - [seenABC, c, seenABC]
 ```
 
-This example recognizes the langage of strings with "abc" has a substring.
+This example recognizes the language of strings with "abc" as a substring.
 
 ## Notes
 
@@ -59,3 +62,7 @@ A rule of thumb: if it is constructed with letters and numbers, it is most likel
 
 * There **must be** a single space after ":", "-", and ",".
 There **must not be** spaces before these charaters.
+
+* There **can be** blank lines inbetween transitions, as shown above.
+
+* Comments are made with "#", as shown above.

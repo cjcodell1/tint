@@ -23,10 +23,12 @@ See each machine's documentation on how to format this file.
 The test file is used to simulate the machine.
 On each line, there is a single, unquoted test.
 For example,
-> a a b b a a
-> a b a
-> 
-> one two three
+```
+a a b b a a
+a b a
+
+one two three
+```
 is an example of a test file with four different tests.
 The first two tests are "a a b b a a" and "a b a".
 The spaces separate each symbol, so there are six symbols in the first test and three in the second.
