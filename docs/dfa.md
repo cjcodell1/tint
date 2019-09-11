@@ -67,7 +67,7 @@ The indentation **must be** made with spaces, **not** tabs.
 
 * The states and symbols **can be** quoted.
 This means if left unquoted, the YAML interpreter treats these has strings automatically.
-The exception is for [special characters](https://yaml.org/spec/1.2/spec.html#Characters).
+The exception is for [special characters](https://yaml.org/spec/1.2/spec.html#id2772075).
 A rule of thumb: if it is constructed with letters and numbers, it is most likely a string.
 
 * There **must be** a single space after ":", "-", and ",".
