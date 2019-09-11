@@ -51,7 +51,7 @@ transitions:
 
   - [seenA, a, seenA]
   - [seenA, b, seenAB]
-  - [seenA, c, seenC]
+  - [seenA, c, seen0]
 
   - [seenAB, a, seenA]
   - [seenAB, b, seen0]
