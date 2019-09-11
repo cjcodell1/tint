@@ -43,3 +43,14 @@ The **-t** flag interprets the test file as a single, quoted test.
 This is helpful for quickly testing a machine has it is being built.
 Here is an example of using this flag:
 > ./tint -m dfa -t my_dfa.yaml "a b c"
+
+## Common Mistakes
+
+* Leaving out indentation for the transitions.
+* Using tabs instead of spaces for transitions.
+* Leaving a [special character](https://yaml.org/spec/1.2/spec.html#Characters) unquoted.
+* Not putting a space after ":", "-", or ",".
+* Not putting a "#" to begin a comment.
+* Forgetting to put commas (",") inbetween states or values in a transition.
+* Misspelling.
+* Copy and paste errors.

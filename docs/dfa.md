@@ -1,5 +1,15 @@
 # Deterministic Finite Automaton
 
+## Usage
+
+```
+./tint -m dfa my_dfa1.yaml my_tests.txt
+./tint -m dfa -v my_dfa2.yaml my_reject_tests.txt
+./tint -m dfa -v -t my_dfa3.yaml "this should accept"
+```
+
+## Formal Grammar
+
 The YAML file for DFAs can be constructed with,
 
 ```
