@@ -50,7 +50,7 @@ Here is an example of using this flag:
 
 * Leaving out indentation for the transitions.
 * Using tabs instead of spaces for transitions.
-* Leaving a [special character](https://yaml.org/spec/1.2/spec.html#Characters) unquoted.
+* Leaving a [special character](https://yaml.org/spec/1.2/spec.html#id2772075) unquoted.
 * Not putting a space after ":", "-", or ",".
 * Not putting a "#" to begin a comment.
 * Forgetting to put commas (",") inbetween states or values in a transition.
