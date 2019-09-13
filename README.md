@@ -4,6 +4,8 @@
 This allows one to program their own model of computation and simulate it with inputs.
 See a machine's documentation for specifics on how to program it.
 
+Please go to the `builds` directory to use operating system-specifc programs.
+
 ## Using tint
 
 ```
