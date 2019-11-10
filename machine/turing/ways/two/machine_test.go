@@ -279,11 +279,8 @@ func init() {
 	}...)
 
 	start = moveTM.Start("r")
-	//fmt.Printf("start: %v\n--------\n", start)
 	step1, _ = moveTM.Step(start)
-	//fmt.Printf("step1: %v\n--------\n", step1)
 	step2, _ = moveTM.Step(step1)
-	//fmt.Printf("step2: %v\n--------\n", step2)
 	stepTests = append(stepTests, []step{
 		{moveTM, "moveTM", start, "{q0 [r] 1}"},
 		{moveTM, "moveTM", step1, "{q0 [r r] 2}"},
