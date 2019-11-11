@@ -290,17 +290,17 @@ func init() {
 	// adding the tests for placeBlankTM
 	start = placeBlankTM.Start("l")
 	stepTests = append(stepTests, []step{
-		{placeBlankTM, "placeBlankTM", start, "{q0 [] 0}"},
+		{placeBlankTM, "placeBlankTM", start, "{q0 [_] 0}"},
 	}...)
 
 	start = placeBlankTM.Start("r")
 	stepTests = append(stepTests, []step{
-		{placeBlankTM, "placeBlankTM", start, "{q0 [] 0}"},
+		{placeBlankTM, "placeBlankTM", start, "{q0 [_] 1}"},
 	}...)
 
 	start = placeBlankTM.Start("")
 	stepTests = append(stepTests, []step{
-		{placeBlankTM, "placeBlankTM", start, "{q0 [] 0}"},
+		{placeBlankTM, "placeBlankTM", start, "{q0 [_] 1}"},
 	}...)
 
 	// adding the tests for starSymTM
@@ -310,7 +310,7 @@ func init() {
 	stepTests = append(stepTests, []step{
 		{starSymTM, "starSymTM", start, "{next [a a] 1}"},
 		{starSymTM, "starSymTM", step1, "{next [a a] 2}"},
-		{starSymTM, "starSymTM", step2, "{accept [a a] 2}"},
+		{starSymTM, "starSymTM", step2, "{accept [a a _] 3}"},
 	}...)
 
 	// adding the tests for brokenSymTM
@@ -320,7 +320,7 @@ func init() {
 	stepTests = append(stepTests, []step{
 		{brokenSymTM, "brokenSymTM", start, "{next [a a] 1}"},
 		{brokenSymTM, "brokenSymTM", step1, "{next [a a] 2}"},
-		{brokenSymTM, "brokenSymTM", step2, "{next [a a] 2}"},
+		{brokenSymTM, "brokenSymTM", step2, "{next [a a _] 3}"},
 	}...)
 
 	// adding the tests for starStateTM
@@ -330,7 +330,7 @@ func init() {
 	stepTests = append(stepTests, []step{
 		{starStateTM, "starStateTM", start, "{start [c a] 1}"},
 		{starStateTM, "starStateTM", step1, "{start [c c] 2}"},
-		{starStateTM, "starStateTM", step2, "{accept [c c] 2}"},
+		{starStateTM, "starStateTM", step2, "{accept [c c _] 3}"},
 	}...)
 
 	// adding the tests for doNothingTM
@@ -342,7 +342,7 @@ func init() {
 		{doNothingTM, "doNothingTM", start, "{start [hello world !!!] 1}"},
 		{doNothingTM, "doNothingTM", step1, "{start [hello world !!!] 2}"},
 		{doNothingTM, "doNothingTM", step2, "{start [hello world !!!] 3}"},
-		{doNothingTM, "doNothingTM", step3, "{start [hello world !!!] 3}"},
+		{doNothingTM, "doNothingTM", step3, "{start [hello world !!! _] 4}"},
 	}...)
 }
 
