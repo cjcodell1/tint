@@ -4,7 +4,8 @@ package machine
 // represents the available types of machines
 const (
 	DFA = "dfa"
-	TM  = "tm"
+	ONE_WAY_TM  = "one-way-tm"
+	TWO_WAY_TM  = "two-way-tm"
 )
 
 const (

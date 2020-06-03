@@ -53,9 +53,26 @@ func Build(configPath string, machineType string) (machine.Machine, error) {
 
 		return machine, nil
 
-	case machine.TM:
-		//b, ok := b.(tmBuilder)
-		var b tmBuilder
+	case machine.ONE_WAY_TM:
+		//b, ok := b.(oneWayTmBuilder)
+		var b oneWayTmBuilder
+
+		err = yaml.Unmarshal([]byte(config), &b)
+		if err != nil {
+			return nil, err
+		}
+
+		// Build the machine
+		machine, err := b.subBuild()
+		if err != nil {
+			return nil, err
+		}
+
+		return machine, nil
+
+	case machine.TWO_WAY_TM:
+		//b, ok := b.(twoWayTmBuilder)
+		var b twoWayTmBuilder
 
 		err = yaml.Unmarshal([]byte(config), &b)
 		if err != nil {
