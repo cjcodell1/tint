@@ -15,7 +15,8 @@ Current and future machine include:
 - "dfa"
 - "nfa" (planned)
 - "pda" (planned)
-- "tm"
+- "one-way-tm"
+- "two-way-tm"
 
 The machine file is a YAML-specified machine with listed states and transitions.
 See each machine's documentation on how to format this file.
