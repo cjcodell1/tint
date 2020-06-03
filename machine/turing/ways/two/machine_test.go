@@ -270,12 +270,8 @@ func init() {
 
 	// adding the tests for moveTM
 	start = moveTM.Start("l")
-	step1, _ = moveTM.Step(start)
-	step2, _ = moveTM.Step(step1)
 	stepTests = append(stepTests, []step{
-		{moveTM, "moveTM", start, "{q0 [l] 0}"},
-		{moveTM, "moveTM", step1, "{q0 [l] 0}"},
-		{moveTM, "moveTM", step2, "{q0 [l] 0}"},
+		{moveTM, "moveTM", start, "{q0 [_ l] 0}"},
 	}...)
 
 	start = moveTM.Start("r")
@@ -290,7 +286,7 @@ func init() {
 	// adding the tests for placeBlankTM
 	start = placeBlankTM.Start("l")
 	stepTests = append(stepTests, []step{
-		{placeBlankTM, "placeBlankTM", start, "{q0 [_] 0}"},
+		{placeBlankTM, "placeBlankTM", start, "{q0 [_ _] 0}"},
 	}...)
 
 	start = placeBlankTM.Start("r")

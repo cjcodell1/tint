@@ -93,16 +93,8 @@ func (conf configuration) Next(inputs []string) (machine.Configuration, error) {
 	head := conf.head
 
 	// write the next symbol
-	if (head == leng) && (next_symbol == turing.Blank) {
-		//next_conf.tape = prevTape TODO
+	if (head == leng) {
 		next_conf.tape = append(prevTape, next_symbol)
-	} else if (head == leng) && (next_symbol != turing.Blank) {
-		next_conf.tape = append(prevTape, next_symbol)
-	//} else if (head == 0) && (next_symbol == turing.Blank) { TODO
-	//	// replace first symbol with a Blank and DO NOT move
-	//	next_conf.tape = append(prevTape[:0], prevTape[1:]...)
-	//	next_conf.head = head
-	//	return next_conf, nil
 	} else {
 		next_conf.tape = prevTape
 		next_conf.tape[conf.head] = next_symbol
@@ -113,10 +105,14 @@ func (conf configuration) Next(inputs []string) (machine.Configuration, error) {
 	// move AFTER write, so take another len with the next tape
 	leng = len(next_conf.tape)
 
-//	if (head == leng) && (next_move == turing.Right) { TODO
-//		next_conf.head = head + 1
 	if (head == 0) && (next_move == turing.Left) {
-		next_conf.head = head
+		// the head remains 0 instead of -1 to avoid confusion of if the head is at the end of the tape:
+		// tape:  "_ _ a a a a _ a a a _" len=11
+		// start:     ^
+		// head:              ^           pos=4  how to check if head is at end of tape?
+		// head:                      ^   pos=8  how to check if head is at end of tape?
+		next_conf.tape = append([]string{turing.Blank}, next_conf.tape...)
+		next_conf.head = 0
 	} else {
 		if next_move == turing.Right {
 			next_conf.head = head + 1
